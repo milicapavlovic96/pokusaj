@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">pokusaj</string>
+    <string name="FACEBOOK_APP_ID">442914906435327</string>
+    <string name="ACCOUNT_KIT_CLIENT_TOKEN">6f5583df9b1f4454ad4b3e0b5c469865</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>
