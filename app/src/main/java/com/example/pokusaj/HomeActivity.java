@@ -77,6 +77,13 @@ public class HomeActivity extends AppCompatActivity {
                                             showUpdateDialog(account.getPhoneNumber().toString());
 
                                         }
+                                        else
+                                        {
+                                            //if user already available in our system
+                                            Common.currentUser=userSnapshot.toObject(User.class);
+                                            bottomNavigationView.setSelectedItemId(R.id.action_home);
+
+                                        }
                                         if(dialog.isShowing())
                                             dialog.dismiss();
 
@@ -108,7 +115,6 @@ public class HomeActivity extends AppCompatActivity {
                 return loadFragment(fragment);
             }
         });
-        bottomNavigationView.setSelectedItemId(R.id.action_home);
     }
 
     private boolean loadFragment(Fragment fragment) {
@@ -152,6 +158,11 @@ public class HomeActivity extends AppCompatActivity {
                                 bottomSheetDialog.dismiss();
                                 if(dialog.isShowing())
                                     dialog.dismiss();
+
+                                Common.currentUser=user;
+                                bottomNavigationView.setSelectedItemId(R.id.action_home);
+
+
                                 Toast.makeText(HomeActivity.this, "Thank you", Toast.LENGTH_SHORT).show();
 
                             }
