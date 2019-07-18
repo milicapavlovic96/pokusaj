@@ -34,7 +34,7 @@ public class MyViewHolder extends RecyclerView.ViewHolder{
     public MyViewHolder(@NonNull View itemView){
         super(itemView);
         imageView=(ImageView)itemView.findViewById(R.id.image_look_book);
-    }
+    }   
 }
 
     @NonNull
