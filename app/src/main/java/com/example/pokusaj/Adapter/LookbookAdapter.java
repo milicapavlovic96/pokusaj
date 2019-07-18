@@ -28,7 +28,7 @@ public LookbookAdapter(Context context, List<Banner> lookbook){
 
 public class MyViewHolder extends RecyclerView.ViewHolder{
 
-   
+
     ImageView imageView;
 
     public MyViewHolder(@NonNull View itemView){
