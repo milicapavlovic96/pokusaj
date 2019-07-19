@@ -27,12 +27,12 @@
     app:sv_typeface="@font/bellerose"
     ></com.shuhart.stepview.StepView>
 
-    <androidx.viewpager.widget.ViewPager
+    <com.example.pokusaj.Common.NonSwipeViewPager
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/view_pager"
         android:layout_below="@+id/step_view"
-        android:layout_above="@+id/layout_button"></androidx.viewpager.widget.ViewPager>
+        android:layout_above="@+id/layout_button"></com.example.pokusaj.Common.NonSwipeViewPager>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -63,7 +63,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/btn_next_step"
             android:text="Next"
-
+            android:enabled="false"
             android:fontFamily="@font/bellerose"
             android:layout_centerHorizontal="true"
             android:layout_weight="1"

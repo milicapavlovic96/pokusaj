@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.pokusaj.Adapter.MySalonAdapter;
+import com.example.pokusaj.Common.Common;
 import com.example.pokusaj.Common.SpacesItemDecoration;
 import com.example.pokusaj.Interface.IAllSalonLoadListener;
 import com.example.pokusaj.Interface.IBranchLoadListener;
@@ -72,7 +73,7 @@ public class BookingStep1Fragment extends Fragment implements IAllSalonLoadListe
         iAllSalonLoadListener=this;
         iBranchLoadListener=this;
 
-        dialog=new SpotsDialog.Builder().setContext(getActivity()).build();
+        dialog=new SpotsDialog.Builder().setContext(getActivity()).setCancelable(false).build();
 
 
     }
@@ -137,6 +138,7 @@ public class BookingStep1Fragment extends Fragment implements IAllSalonLoadListe
 
     private void loadBranchOfCity(String cityName) {
         dialog.show();
+        Common.city=cityName;
         branchRef=FirebaseFirestore.getInstance()
                 .collection("AllLaboratories")
                 .document(cityName)
@@ -149,7 +151,12 @@ public class BookingStep1Fragment extends Fragment implements IAllSalonLoadListe
             if(task.isSuccessful())
             {
                 for(QueryDocumentSnapshot documentSnapshot:task.getResult())
-                    list.add(documentSnapshot.toObject(Laboratory.class));
+                {
+                   Laboratory laboratory=documentSnapshot.toObject(Laboratory.class);
+                   laboratory.setLabId(documentSnapshot.getId());
+                    list.add(laboratory);
+
+                }
                 iBranchLoadListener.onBranchLoadSuccess(list);
             }
         }
