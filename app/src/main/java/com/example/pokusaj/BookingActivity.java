@@ -58,24 +58,48 @@ public class BookingActivity extends AppCompatActivity {
         if(Common.step==3||Common.step>0){
             Common.step--;
             viewPager.setCurrentItem(Common.step);
+            if(Common.step<3)
+            {
+                btn_next_step.setEnabled(true);
+                setColorButton();
+            }
         }
     }
 
     @OnClick(R.id.btn_next_step)
-    void nextClick(){
+    void nextClick() {
 
-        if(Common.step<3||Common.step==0)
-        {
+        if (Common.step < 3 || Common.step == 0) {
             Common.step++;
-            if(Common.step==1)
-            {
-                if(Common.currentLab!=null)
+            if (Common.step == 1) {
+                if (Common.currentLab != null)
                     loadDoktorByLab(Common.currentLab.getLabId());
             }
-            viewPager.setCurrentItem(Common.step);
+            //viewPager.setCurrentItem(Common.step);
+         else if (Common.step == 2)
+        {
+            if (Common.currentDoktor != null)
+                loadTimeSlotDoktor(Common.currentDoktor.getDoktorId());
         }
+            else if (Common.step == 3)
+            {
+                if (Common.currentTimeSlot != -1)
+                    confirmBooking();
+            }
+        viewPager.setCurrentItem(Common.step);
 
+    }
+    }
 
+    private void confirmBooking() {
+       //send broadcast to fragment step four
+        Intent intent=new Intent(Common.KEY_CONFIRM_BOOKING);
+        localBroadcastManager.sendBroadcast(intent);
+            }
+
+    private void loadTimeSlotDoktor(String doktorId) {
+        Intent intent=new Intent(Common.KEY_DISPLAY_TIME_SLOT);
+        localBroadcastManager.sendBroadcast(intent);
     }
 
     private void loadDoktorByLab(String labId) {
@@ -96,7 +120,7 @@ public class BookingActivity extends AppCompatActivity {
                     {
                         Doktor doktor=doktorSnapShot.toObject(Doktor.class);
                         doktor.setPassword("");
-                        doktor.setLabId(doktorSnapShot.getId());
+                        doktor.setDoktorId(doktorSnapShot.getId());
                         doktori.add(doktor);
                     }
                     Intent intent=new Intent(Common.KEY_DOKTOR_LOAD_DONE);
@@ -117,7 +141,16 @@ public class BookingActivity extends AppCompatActivity {
     private BroadcastReceiver buttonNextReciever=new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Common.currentLab=intent.getParcelableExtra(Common.KEY_SALON_STORE);
+            int step=intent.getIntExtra(Common.KEY_STEP,0);
+            if(step==1)
+                Common.currentLab=intent.getParcelableExtra(Common.KEY_SALON_STORE);
+            else if(step==2)
+                Common.currentDoktor=intent.getParcelableExtra(Common.KEY_DOKTOR_SELECTED);
+            else if(step==3)
+                Common.currentTimeSlot=intent.getIntExtra(Common.KEY_TIME_SLOT,-1);
+
+
+
             btn_next_step.setEnabled(true);
             setColorButton();
         }
@@ -162,6 +195,7 @@ public class BookingActivity extends AppCompatActivity {
                 else
                     btn_previous_step.setEnabled(true);
 
+                btn_next_step.setEnabled(false);
                 setColorButton();
             }
 

@@ -5,8 +5,16 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class Doktor implements Parcelable {
-   private String name,username,password,labId;
+   private String name,username,password,labId,doktorId;
     private Long rating;
+
+   public String getDoktorId() {
+        return doktorId;
+    }
+
+    public void setDoktorId(String doktorId) {
+        this.doktorId = doktorId;
+    }
 
     public Doktor() {
     }

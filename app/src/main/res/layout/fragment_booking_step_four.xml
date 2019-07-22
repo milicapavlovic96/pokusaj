@@ -1,15 +1,227 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/colorBackground">
 
-    <TextView
-        android:text="STEP4"
-        android:textSize="30sp"
-        android:layout_centerInParent="true"
+    <ImageView
+        android:src="@drawable/logo"
+        android:layout_gravity="center_horizontal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
-</RelativeLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="8dp"
+        android:background="@drawable/rounded_dialog">
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Hvala što koristite naše usluge!"
+            android:textAllCaps="true"
+            android:textSize="18sp"
+            android:fontFamily="@font/bellerose"
+            android:textStyle="bold"
+            android:layout_gravity="center_horizontal"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Informacije o rezervaciji"
+            android:textAllCaps="true"
+            android:fontFamily="@font/bellerose"
+            android:textStyle="bold"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:src="@drawable/ic_event_note_black_24dp"
+                />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/txt_booking_time_text"
+            android:text="10h00 at 28/03/2019"
+            android:textSize="14sp"
+            android:layout_marginLeft="4dp"
+            android:fontFamily="@font/bellerose"
+            />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:src="@drawable/ic_account_circle_black_24dp"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/txt_booking_doktor"
+                android:text="Zoran"
+                android:textSize="14sp"
+                android:layout_marginLeft="4dp"
+                android:fontFamily="@font/bellerose"
+                />
+
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="4dp"
+            android:background="@android:color/background_dark"
+            ></View>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/txt_laboratory_name"
+            android:text="Laboratorija #1"
+            android:textAllCaps="true"
+            android:fontFamily="@font/bellerose"
+            android:textStyle="bold"
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:src="@drawable/ic_web_black_24dp"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/txt_lab_website"
+                android:text="www.nslab.rs/"
+                android:textSize="14sp"
+                android:layout_marginLeft="4dp"
+                android:fontFamily="@font/bellerose"
+                />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:src="@drawable/ic_local_phone_black_24dp"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/txt_lab_phone"
+                android:text="021/520-092"
+                android:textSize="14sp"
+                android:layout_marginLeft="4dp"
+                android:fontFamily="@font/bellerose"
+                />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:src="@drawable/ic_access_time_black_24dp"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/txt_lab_open_hours"
+                android:text="9h00 - 19h00"
+                android:textSize="14sp"
+                android:layout_marginLeft="4dp"
+                android:fontFamily="@font/bellerose"
+                />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:src="@drawable/ic_location_on_black_24dp"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/txt_laboratory_address"
+                android:text="Preradovićeva 57, Petrovaradin"
+                android:textSize="14sp"
+                android:layout_marginLeft="4dp"
+                android:fontFamily="@font/bellerose"
+                />
+
+
+        </LinearLayout>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/btn_confirm"
+            android:text="CONFIRM"
+            android:layout_marginTop="8dp"
+            android:background="@color/colorButton"
+            android:textColor="@android:color/white"
+            android:fontFamily="@font/bellerose"
+            android:layout_centerHorizontal="true"
+            android:layout_above="@+id/txt_skip"
+
+            />
+
+
+    </LinearLayout>
+
+
+</LinearLayout>
