@@ -47,6 +47,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import dmax.dialog.SpotsDialog;
+import io.paperdb.Paper;
 
 public class BookingStep4Fragment extends Fragment {
 
@@ -91,8 +92,9 @@ TextView txt_lab_website;
     Timestamp timestamp=new Timestamp(bookingDateWithourHouse.getTime());
 
 
-    BookingInformation bookingInformation=new BookingInformation();
+    final BookingInformation bookingInformation=new BookingInformation();
 
+    bookingInformation.setCityBook(Common.city);
     bookingInformation.setTimestamp(timestamp);
     bookingInformation.setDone(false);
     bookingInformation.setDoktorId(Common.currentDoktor.getDoktorId());
@@ -136,13 +138,21 @@ TextView txt_lab_website;
 
     private void addToUserBooking(BookingInformation bookingInformation) {
 
-        CollectionReference userBooking=FirebaseFirestore.getInstance()
+        final CollectionReference userBooking=FirebaseFirestore.getInstance()
                 .collection("User")
                 .document(Common.currentUser.getPhoneNumber())
                 .collection("Booking");
-
-        userBooking.whereEqualTo("done",false)
-                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        Calendar calendar= Calendar.getInstance();
+        calendar.add(Calendar.DATE,0);
+        calendar.set(Calendar.HOUR_OF_DAY,0);
+        calendar.set(Calendar.MINUTE,0);
+        Timestamp toDayTimeStamp=new Timestamp(calendar.getTime());
+        userBooking
+                .whereGreaterThanOrEqualTo("timestamp",toDayTimeStamp)
+                .whereEqualTo("done",false)
+                .limit(1)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                     if(task.getResult().isEmpty())
@@ -208,14 +218,14 @@ TextView txt_lab_website;
         String startEventTime=calendarDateFormat.format(startEvent.getTime());
         String endEventTime=calendarDateFormat.format(endEvent.getTime());
 
-        addToDeviceCalendar(startEventTime,endEventTime,"Haircut Booking",
-                new StringBuilder("Haircut from ")
+        addToDeviceCalendar(startEventTime,endEventTime,"Zakazan pregled",
+                new StringBuilder("Pregled od ")
         .append(startTime)
-                .append(" with ")
+                .append(" kod ")
                 .append(Common.currentDoktor.getName())
-                .append(" at ")
+                .append(" u ")
                 .append(Common.currentLab.getName()).toString(),
-                new StringBuilder("Address: ").append(Common.currentLab.getAddress()).toString());
+                new StringBuilder("Adresa: ").append(Common.currentLab.getAddress()).toString());
 
 
 
@@ -250,9 +260,10 @@ TextView txt_lab_website;
             else
                 calendars=Uri.parse("content://calendar/events");
 
-        getActivity().getContentResolver().insert(calendars,event);
+        Uri uri_save=getActivity().getContentResolver().insert(calendars,event);
 
-
+        Paper.init(getActivity());
+        Paper.book().write(Common.EVENT_URI_CACHE,uri_save.toString());
 
 
 
