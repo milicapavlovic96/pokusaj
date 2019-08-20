@@ -1,8 +1,12 @@
 package com.example.pokusaj.Model;
 
+import com.google.firebase.Timestamp;
+
 public class BookingInformation {
 String customerName,customerPhone,time,doktorId,doktorName,labId,labName,labAddress;
 private Long slot;
+private Timestamp timestamp;
+private boolean done;
 
     public BookingInformation() {
     }
@@ -89,5 +93,21 @@ private Long slot;
 
     public void setSlot(Long slot) {
         this.slot = slot;
+    }
+
+    public Timestamp getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(Timestamp timestamp) {
+        this.timestamp = timestamp;
+    }
+
+    public boolean isDone() {
+        return done;
+    }
+
+    public void setDone(boolean done) {
+        this.done = done;
     }
 }

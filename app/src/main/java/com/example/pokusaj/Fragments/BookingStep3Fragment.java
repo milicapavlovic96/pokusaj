@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.provider.CalendarContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,6 +57,7 @@ public class BookingStep3Fragment extends Fragment implements ITimeSlotLoadListe
 
     Unbinder unbinder;
     LocalBroadcastManager localBroadcastManager;
+    Calendar selected_date;
 
     @BindView(R.id.recycler_time_slot)
     RecyclerView recycler_time_slot;
@@ -179,9 +181,9 @@ init(itemView);
         horizontalCalendar.setCalendarListener(new HorizontalCalendarListener() {
             @Override
             public void onDateSelected(Calendar date, int position) {
-                if(Common.currentDate.getTimeInMillis()!=date.getTimeInMillis())
+                if(Common.bookingDate.getTimeInMillis()!=date.getTimeInMillis())
                 {
-                    Common.currentDate=date;
+                    Common.bookingDate=date;
                     loadAvailableTimeSlotOfDoktor(Common.currentDoktor.getDoktorId(),
                             simpleDateFormat.format(date.getTime()));
 
@@ -200,14 +202,19 @@ init(itemView);
    simpleDateFormat=new SimpleDateFormat("dd_MM_yyyy");
    dialog=new SpotsDialog.Builder().setContext(getContext()).setCancelable(false).build();
 
-
+selected_date= Calendar.getInstance();
+selected_date.add(Calendar.DATE,0);
     }
+
+
 
     @Override
     public void onDestroy() {
         localBroadcastManager.unregisterReceiver(displayTimeSlot);
         super.onDestroy();
     }
+
+
 
     @Override
     public void onTimeSlotLoadSuccess(List<TimeSlot> timeSlotList) {
