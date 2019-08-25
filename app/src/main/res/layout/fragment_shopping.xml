@@ -1,14 +1,86 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Fragments.ShoppingFragment">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".Fragments.ShoppingFragment"
+    android:padding="8dp"
+    android:orientation="vertical"
+    android:background="@color/colorBackground"
+
+    >
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/background_dark"
+        />
+
+    <com.google.android.material.chip.ChipGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:id="@+id/chip_group"
+        android:paddingTop="10dp"
+        android:orientation="horizontal"
+        >
+
+        <com.google.android.material.chip.Chip
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/chip_bebe"
+            app:chipBackgroundColor="@android:color/holo_orange_dark"
+            android:textColor="@android:color/black"
+            android:text="Bebe"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            />
+        <com.google.android.material.chip.Chip
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/chip_lice"
+            app:chipBackgroundColor="@android:color/darker_gray"
+            android:textColor="@android:color/black"
+            android:text="Lice"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            />
+
+        <com.google.android.material.chip.Chip
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/chip_telo"
+            app:chipBackgroundColor="@android:color/darker_gray"
+            android:textColor="@android:color/black"
+            android:text="Telo"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            />
+
+        <com.google.android.material.chip.Chip
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/chip_vitamini"
+            app:chipBackgroundColor="@android:color/darker_gray"
+            android:textColor="@android:color/black"
+            android:text="Vitamini"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            />
+
+
+
+    </com.google.android.material.chip.ChipGroup>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="10dp"
+        android:background="@android:color/background_dark"
+        />
+
+    <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:id="@+id/recycler_items">
+    </androidx.recyclerview.widget.RecyclerView>
 
-</FrameLayout>
+</LinearLayout>
