@@ -1,7 +1,7 @@
 package com.example.pokusaj.Model;
 
 public class ShoppingItem {
-    private String name,image;
+    private String id,name,image;
     private Long price;
 
     public String getName() {
@@ -26,5 +26,13 @@ public class ShoppingItem {
 
     public void setPrice(Long price) {
         this.price = price;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }

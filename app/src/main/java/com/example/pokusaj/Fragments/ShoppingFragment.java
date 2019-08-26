@@ -107,6 +107,7 @@ void bebeChipClick(){
                         List<ShoppingItem> shoppingItems=new ArrayList<>();
                         for(DocumentSnapshot itemSnapShot:task.getResult()){
                             ShoppingItem shoppingItem=itemSnapShot.toObject(ShoppingItem.class);
+                            shoppingItem.setId(itemSnapShot.getId());
                             shoppingItems.add(shoppingItem);
                         }
                         iShoppingDataLoadListener.onShoppingLoadSuccess(shoppingItems);

@@ -107,26 +107,41 @@
                 android:layout_width="0dp"
                 >
 
-                <LinearLayout
+                <RelativeLayout
                     android:orientation="vertical"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
+                    <com.nex3z.notificationbadge.NotificationBadge
+                        android:id="@+id/notification_badge"
+                        android:layout_toRightOf="@+id/txt_cart_title"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        app:nbMaxTextLength="2"
+                        />
+
+
+
                     <ImageView
+                        android:id="@+id/cart_icon"
                         android:src="@drawable/ic_shopping_cart_black_24dp2"
                         android:layout_width="50dp"
-                        android:layout_gravity="center_horizontal"
+                        android:layout_centerHorizontal="true"
+
                         android:layout_height="50dp" />
 
                     <TextView
+                        android:id="@+id/txt_cart_title"
+                        android:layout_below="@+id/cart_icon"
                         android:text="Cart"
                         android:fontFamily="@font/bellerose"
-                        android:layout_gravity="center_horizontal"
+                        android:layout_centerHorizontal="true"
+
                         android:textSize="@dimen/textCardSize"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" />
 
-                </LinearLayout>
+                </RelativeLayout>
 
             </androidx.cardview.widget.CardView>
             <androidx.cardview.widget.CardView

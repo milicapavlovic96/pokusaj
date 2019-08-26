@@ -65,6 +65,16 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    @OnClick(R.id.btn_login_username)
+    void loginUsername()
+    {
+        Intent intent=new Intent(this,StaffActivity.class);
+        startActivity(intent);
+    }
+
+
+
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
