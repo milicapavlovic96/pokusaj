@@ -26,6 +26,7 @@ import android.widget.Toast;
 import com.example.pokusaj.Adapter.HomeSliderAdapter;
 import com.example.pokusaj.Adapter.LookbookAdapter;
 import com.example.pokusaj.BookingActivity;
+import com.example.pokusaj.CartActivity;
 import com.example.pokusaj.Common.Common;
 import com.example.pokusaj.Database.CartDatabase;
 import com.example.pokusaj.Database.DatabaseUtils;
@@ -206,10 +207,20 @@ public class HomeFragment extends Fragment implements IBannerLoadListener, ILook
         }
     }
 
+
+
+
     @OnClick(R.id.card_view_booking)
     void booking(){
     startActivity(new Intent(getActivity(), BookingActivity.class));
     }
+
+    @OnClick(R.id.card_view_cart)
+            void openCartActivity(){
+        startActivity(new Intent(getActivity(), CartActivity.class));
+
+    }
+
 
     CollectionReference bannerRef,lookbookRef;
 

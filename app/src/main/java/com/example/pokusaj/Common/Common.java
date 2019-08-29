@@ -28,6 +28,7 @@ public class Common {
     public static User currentUser;
     public static Laboratory currentLab;
     public static int step=0;
+    public static String state_name="";
 
     public static String city="";
     public static Doktor currentDoktor;

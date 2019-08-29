@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
     @OnClick(R.id.txt_skip)
     void skipLoginJustGoHome()
     {
-        Intent intent=new Intent(this,HomeActivity.class);
+        Intent intent=new Intent(this,StaffMainActivity.class);
         intent.putExtra(Common.IS_LOGIN,false);
         startActivity(intent);
     }
@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
     @OnClick(R.id.btn_login_username)
     void loginUsername()
     {
-        Intent intent=new Intent(this,StaffActivity.class);
+        Intent intent=new Intent(this, StaffMainActivity.class);
         startActivity(intent);
     }
 
