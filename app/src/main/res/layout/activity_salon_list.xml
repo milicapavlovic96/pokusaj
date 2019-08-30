@@ -7,14 +7,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorBackground"
-    tools:context=".SalonListActivity"
+    tools:context=".LabListActivity"
     >
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/txt_salon_count"
-        android:text="All Salon (0)"
+        android:text="Spisak klinika (0)"
         android:textSize="22sp"
         android:padding="8dp"
         android:textColor="@android:color/white"

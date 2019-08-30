@@ -23,7 +23,7 @@ public class Common {
     public static final String KEY_TIME_SLOT ="TIME_SLOT" ;
     public static final String KEY_CONFIRM_BOOKING = "CONFIRM_BOOKING";
     public static final String EVENT_URI_CACHE = "URI_EVENT_SAVE";
-
+public static Laboratory selectedLab;
     public static String IS_LOGIN="IsLogin";
     public static User currentUser;
     public static Laboratory currentLab;

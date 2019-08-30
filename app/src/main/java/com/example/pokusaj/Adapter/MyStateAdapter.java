@@ -14,9 +14,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.pokusaj.Common.Common;
 import com.example.pokusaj.Interface.IRecyclerItemSelectedListener;
+import com.example.pokusaj.LabListActivity;
 import com.example.pokusaj.Model.City;
 import com.example.pokusaj.R;
-import com.example.pokusaj.SalonListActivity;
 
 import java.util.List;
 
@@ -55,7 +55,7 @@ holder.setiRecyclerItemSelectedListener(new IRecyclerItemSelectedListener() {
     @Override
     public void onItemSelectedListener(View view, int pos) {
         Common.state_name=cityList.get(position).getName();
-        context.startActivity(new Intent(context, SalonListActivity.class));
+        context.startActivity(new Intent(context, LabListActivity.class));
     }
 });
     }

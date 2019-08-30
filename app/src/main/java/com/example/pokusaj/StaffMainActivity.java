@@ -35,7 +35,7 @@ public class StaffMainActivity extends AppCompatActivity implements IOnAllStateL
     @BindView(R.id.recycler_state)
     RecyclerView recycler_state;
 
-    CollectionReference allSalonCollection;
+    CollectionReference allLabsCollection;
     IOnAllStateLoadListener iOnAllStateLoadListener;
 
     MyStateAdapter adapter;
@@ -57,7 +57,7 @@ public class StaffMainActivity extends AppCompatActivity implements IOnAllStateL
     private void loadAllStateFromFireStore() {
         dialog.show();
 
-        allSalonCollection.get()
+        allLabsCollection.get()
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
@@ -82,7 +82,7 @@ public class StaffMainActivity extends AppCompatActivity implements IOnAllStateL
     }
 
     private void init() {
-        allSalonCollection= FirebaseFirestore.getInstance().collection("AllLaboratories");
+        allLabsCollection= FirebaseFirestore.getInstance().collection("AllLaboratories");
         iOnAllStateLoadListener=this;
         dialog=new SpotsDialog.Builder().setContext(this).setCancelable(false).build();
 

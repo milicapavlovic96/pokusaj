@@ -1,5 +1,5 @@
 package com.example.pokusaj;
-  
+
 import android.app.AlertDialog;
 import android.os.Bundle;
 import android.widget.TextView;
@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.pokusaj.Adapter.LabAdapter;
 import com.example.pokusaj.Adapter.MySalonAdapter;
 import com.example.pokusaj.Common.Common;
 import com.example.pokusaj.Common.SpacesItemDecoration;
@@ -30,7 +31,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import dmax.dialog.SpotsDialog;
 
-public class SalonListActivity extends AppCompatActivity implements IOnLoadCountSalon, IBranchLoadListener {
+public class LabListActivity extends AppCompatActivity implements IOnLoadCountSalon, IBranchLoadListener {
    @BindView(R.id.txt_salon_count)
     TextView txt_salon_count;
 
@@ -72,7 +73,8 @@ AlertDialog dialog;
                        for(DocumentSnapshot salonSnapShot:task.getResult())
                        {
                            Laboratory lab=salonSnapShot.toObject(Laboratory.class);
-                      labs.add(lab);
+                      lab.setLabId(salonSnapShot.getId());
+                           labs.add(lab);
                        }
                        iBranchLoadListener.onBranchLoadSuccess(labs);
                         }
@@ -101,7 +103,7 @@ AlertDialog dialog;
 
     @Override
     public void onLoadCountSalonSuccess(int count) {
-        txt_salon_count.setText(new StringBuilder("All Salon (")
+        txt_salon_count.setText(new StringBuilder("Spisak klinika (")
         .append(count)
         .append(")"));
 
@@ -109,7 +111,7 @@ AlertDialog dialog;
 
     @Override
     public void onBranchLoadSuccess(List<Laboratory> laboratoryList) {
-        MySalonAdapter salonAdapter=new MySalonAdapter(this,laboratoryList);
+        LabAdapter salonAdapter=new LabAdapter(this,laboratoryList);
         recycler_salon.setAdapter(salonAdapter);
         dialog.dismiss();
     }

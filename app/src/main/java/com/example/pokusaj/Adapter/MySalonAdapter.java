@@ -39,7 +39,7 @@ public class MySalonAdapter extends RecyclerView.Adapter<MySalonAdapter.MyViewHo
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View viewItem= LayoutInflater.from(context)
-                .inflate(R.layout.layout_salon,parent,false);
+                .inflate(R.layout.layout_lab,parent,false);
 
         return new MyViewHolder(viewItem);
     }
@@ -50,6 +50,9 @@ public class MySalonAdapter extends RecyclerView.Adapter<MySalonAdapter.MyViewHo
         holder.txt_laboratory_address.setText(laboratoryList.get(position).getAddress());
     if(!cardViewList.contains(holder.card_salon))
         cardViewList.add(holder.card_salon);
+
+
+
 
     holder.setiRecyclerItemSelectedListener(new IRecyclerItemSelectedListener() {
         @Override
