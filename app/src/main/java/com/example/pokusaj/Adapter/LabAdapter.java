@@ -18,13 +18,17 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.pokusaj.Common.Common;
 import com.example.pokusaj.Common.CustomLoginDialog;
 import com.example.pokusaj.Interface.IDialogClickListener;
+import com.example.pokusaj.Interface.IGetDoktorListener;
 import com.example.pokusaj.Interface.IRecyclerItemSelectedListener;
+import com.example.pokusaj.Interface.IUserLoginRememberListener;
+import com.example.pokusaj.Model.Doktor;
 import com.example.pokusaj.Model.Laboratory;
 import com.example.pokusaj.R;
 import com.example.pokusaj.StaffHomeActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -39,13 +43,16 @@ public class LabAdapter extends RecyclerView.Adapter<LabAdapter.MyViewHolder> im
     Context context;
     List<Laboratory> laboratoryList;
     List<CardView> cardViewList;
-    LocalBroadcastManager localBroadcastManager;
 
-    public LabAdapter(Context context, List<Laboratory> laboratoryList) {
+    IUserLoginRememberListener iUserLoginRememberListener;
+    IGetDoktorListener iGetDoktorListener;
+
+    public LabAdapter(Context context, List<Laboratory> laboratoryList,IUserLoginRememberListener iUserLoginRememberListener,IGetDoktorListener iGetDoktorListener) {
         this.context = context;
         this.laboratoryList = laboratoryList;
         cardViewList=new ArrayList<>();
-        localBroadcastManager=LocalBroadcastManager.getInstance(context);
+   this.iGetDoktorListener=iGetDoktorListener;
+   this.iUserLoginRememberListener=iUserLoginRememberListener;
     }
 
     @NonNull
@@ -134,6 +141,20 @@ public class LabAdapter extends RecyclerView.Adapter<LabAdapter.MyViewHolder> im
                             if (task.getResult().size() > 0) {
                                 dialogInterface.dismiss();
                                 loading.dismiss();
+
+
+                                iUserLoginRememberListener.onUserLoginSuccess(userName);
+                                Doktor doktor=new Doktor();
+
+                                for(DocumentSnapshot doktorSnapShot:task.getResult())
+                                {
+                                    doktor=doktorSnapShot.toObject(Doktor.class);
+                                    doktor.setDoktorId(doktorSnapShot.getId());
+
+                                }
+                                iGetDoktorListener.onGetDoktorSuccess(doktor);
+
+
                                 Intent staffHome = new Intent(context, StaffHomeActivity.class);
                                 staffHome.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                 staffHome.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

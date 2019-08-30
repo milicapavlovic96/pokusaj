@@ -15,7 +15,10 @@ import com.example.pokusaj.Adapter.MySalonAdapter;
 import com.example.pokusaj.Common.Common;
 import com.example.pokusaj.Common.SpacesItemDecoration;
 import com.example.pokusaj.Interface.IBranchLoadListener;
+import com.example.pokusaj.Interface.IGetDoktorListener;
 import com.example.pokusaj.Interface.IOnLoadCountSalon;
+import com.example.pokusaj.Interface.IUserLoginRememberListener;
+import com.example.pokusaj.Model.Doktor;
 import com.example.pokusaj.Model.Laboratory;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -23,6 +26,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,8 +34,9 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import dmax.dialog.SpotsDialog;
+import io.paperdb.Paper;
 
-public class LabListActivity extends AppCompatActivity implements IOnLoadCountSalon, IBranchLoadListener {
+public class LabListActivity extends AppCompatActivity implements IOnLoadCountSalon, IBranchLoadListener, IGetDoktorListener, IUserLoginRememberListener {
    @BindView(R.id.txt_salon_count)
     TextView txt_salon_count;
 
@@ -111,13 +116,28 @@ AlertDialog dialog;
 
     @Override
     public void onBranchLoadSuccess(List<Laboratory> laboratoryList) {
-        LabAdapter salonAdapter=new LabAdapter(this,laboratoryList);
+        LabAdapter salonAdapter=new LabAdapter(this,laboratoryList,this,this);
         recycler_salon.setAdapter(salonAdapter);
         dialog.dismiss();
     }
 
     @Override
     public void onBranchLoadFailed(String message) {
+
+    }
+
+    @Override
+    public void onGetDoktorSuccess(Doktor doktor) {
+    Common.currentDoktor=doktor;
+    Paper.book().write(Common.DOKTOR_KEY,new Gson().toJson(doktor));
+    }
+
+    @Override
+    public void onUserLoginSuccess(String user) {
+        Paper.init(this);
+        Paper.book().write(Common.LOGGED_KEY,user);
+        Paper.book().write(Common.STATE_KEY,Common.state_name);
+        Paper.book().write(Common.LAB_KEY,new Gson().toJson(Common.selectedLab));
 
     }
 }

@@ -9,6 +9,9 @@
     <string name="time_bullet">\u2022 Time:</string>
     <string name="stylelist_bullet">\u2022 Doktor:</string>
     <string name="bullet">\u2022</string>
+    <string name="open">Open</string>
+    <string name="close">Close</string>
+
 
 
 </resources>
