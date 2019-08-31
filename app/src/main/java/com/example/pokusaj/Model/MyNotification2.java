@@ -1,25 +1,14 @@
 package com.example.pokusaj.Model;
 
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.FieldValue;
 
-import java.lang.reflect.Field;
-
-public class MyNotification {
-
+public class MyNotification2 {
     private String uid,title,content;
     private boolean read;
-private FieldValue serverTimeStamp;
+    private Timestamp serverTimestamp;
 
-    public FieldValue getServerTimeStamp() {
-        return serverTimeStamp;
-    }
-
-    public void setServerTimeStamp(FieldValue serverTimeStamp) {
-        this.serverTimeStamp = serverTimeStamp;
-    }
-
-    public MyNotification() {
-
+    public MyNotification2() {
     }
 
     public String getUid() {
@@ -52,5 +41,13 @@ private FieldValue serverTimeStamp;
 
     public void setRead(boolean read) {
         this.read = read;
+    }
+
+    public Timestamp getServerTimeStamp() {
+        return serverTimestamp;
+    }
+
+    public void setServerTimeStamp(Timestamp serverTimestamp) {
+        this.serverTimestamp = serverTimestamp;
     }
 }

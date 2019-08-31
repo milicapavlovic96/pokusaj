@@ -186,9 +186,16 @@ public class HomeFragment extends Fragment implements IBannerLoadListener, ILook
                 public void onSuccess(Void aVoid) {
             //delete from user i onda from calendar
                     Paper.init(getActivity());
-                    Uri eventUri= Uri.parse(Paper.book().read(Common.EVENT_URI_CACHE).toString());
-                    getActivity().getContentResolver().delete(eventUri,null,null);
+                    if(Paper.book().read(Common.EVENT_URI_CACHE)!= null)
+                    {
+                        String eventString=Paper.book().read(Common.EVENT_URI_CACHE).toString();
+                        Uri eventUri=null;
+                        if(eventString!=null&&!TextUtils.isEmpty(eventString))
+                            eventUri= Uri.parse(eventString);
+                        if(eventUri!=null)
+                            getActivity().getContentResolver().delete(eventUri,null,null);
 
+                    }
                     Toast.makeText(getActivity(),"Success delete booking!",Toast.LENGTH_SHORT).show();
 
 

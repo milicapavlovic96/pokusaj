@@ -56,6 +56,7 @@ public class Common {
     public static final String DOKTOR_KEY = "DOKTOR";
     public static final String TITLE_KEY = "title";
     public static final String CONTENT_KEY = "content";
+    public static final int MAX_NOTIFICATION_PER_LOAD = 10;
     public static Laboratory selectedLab;
     public static String IS_LOGIN="IsLogin";
     public static User currentUser;
@@ -216,7 +217,7 @@ public class Common {
                MyToken myToken=new MyToken();
                 myToken.setToken(token);
                 myToken.setToken_type(TOKEN_TYPE.DOKTOR);
-                myToken.setUser(user);
+                myToken.setUserPhone(user);
 
 
                 FirebaseFirestore.getInstance()
@@ -245,7 +246,7 @@ public class Common {
                     MyToken myToken = new MyToken();
                     myToken.setToken(s);
                     myToken.setToken_type(TOKEN_TYPE.CLIENT);
-                    myToken.setUser(account.getPhoneNumber().toString());
+                    myToken.setUserPhone(account.getPhoneNumber().toString());
 
             FirebaseFirestore.getInstance()
                     .collection("Tokens")
