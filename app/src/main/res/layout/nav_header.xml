@@ -15,5 +15,13 @@
         android:background="@drawable/logo"
         />
 
-
+<TextView
+    android:id="@+id/txt_doktor_name"
+    android:text="000"
+    android:textStyle="bold"
+    android:textSize="24sp"
+    android:fontFamily="@font/bellerose"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    />
 </LinearLayout>
