@@ -21,6 +21,11 @@ import com.example.pokusaj.Model.MyToken;
 import com.example.pokusaj.Model.User;
 import com.example.pokusaj.R;
 import com.example.pokusaj.Service.MyFCMService;
+import com.facebook.accountkit.AccessToken;
+import com.facebook.accountkit.Account;
+import com.facebook.accountkit.AccountKit;
+import com.facebook.accountkit.AccountKitCallback;
+import com.facebook.accountkit.AccountKitError;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
@@ -159,6 +164,40 @@ public class Common {
         notificationManager.notify(notification_id,notification);
     }
 
+    public static void showNotification2(Context context, int notification_id, String title, String content, Intent intent) {
+        PendingIntent pendingIntent=null;
+        if(intent!=null)
+            pendingIntent=PendingIntent.getActivity(context,
+                    notification_id,
+                    intent,
+                    PendingIntent.FLAG_UPDATE_CURRENT);
+        String NOTIFICATION_CHANNEL_ID="edmt_client_booking_app";
+        NotificationManager notificationManager=(NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
+
+        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.O)
+        {
+            NotificationChannel notificationChannel=new NotificationChannel(NOTIFICATION_CHANNEL_ID,"DOKTOR BOOKING APP",NotificationManager.IMPORTANCE_DEFAULT);
+
+            notificationChannel.setDescription("Doktor app");
+            notificationChannel.enableLights(true);
+            notificationChannel.enableVibration(true);
+
+            notificationManager.createNotificationChannel(notificationChannel);
+        }
+        NotificationCompat.Builder builder=new NotificationCompat.Builder(context,NOTIFICATION_CHANNEL_ID);
+
+        builder.setContentTitle(title)
+                .setContentText(content)
+                .setAutoCancel(false)
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setLargeIcon(BitmapFactory.decodeResource(context.getResources(),R.mipmap.ic_launcher));
+
+        if(pendingIntent!=null)
+            builder.setContentIntent(pendingIntent);
+        Notification notification=builder.build();
+        notificationManager.notify(notification_id,notification);
+    }
+
     public enum TOKEN_TYPE{
         CLIENT,
         DOKTOR,
@@ -192,6 +231,40 @@ public class Common {
                             }
                         });
             }
+        }
+    }
+    public static void updateToken2(String s)
+    {
+        AccessToken accessToken= AccountKit.getCurrentAccessToken();
+
+        if(accessToken!=null)
+        {
+            AccountKit.getCurrentAccount(new AccountKitCallback<Account>() {
+                @Override
+                public void onSuccess(Account account) {
+                    MyToken myToken = new MyToken();
+                    myToken.setToken(s);
+                    myToken.setToken_type(TOKEN_TYPE.CLIENT);
+                    myToken.setUser(account.getPhoneNumber().toString());
+
+            FirebaseFirestore.getInstance()
+                    .collection("Tokens")
+                    .document(account.getPhoneNumber().toString())
+                    .set(myToken)
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+
+                        }
+                    });
+                }
+
+                @Override
+                public void onError(AccountKitError accountKitError) {
+
+
+                }
+            });
         }
     }
 }
