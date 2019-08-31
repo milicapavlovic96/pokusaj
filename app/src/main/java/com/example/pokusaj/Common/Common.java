@@ -1,14 +1,36 @@
 package com.example.pokusaj.Common;
 
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.Build;
+import android.text.TextUtils;
+
+import androidx.annotation.NonNull;
+import androidx.core.app.NotificationCompat;
+
 import com.example.pokusaj.Model.BookingInformation;
 import com.example.pokusaj.Model.Doktor;
 import com.example.pokusaj.Model.Laboratory;
+import com.example.pokusaj.Model.MyToken;
 import com.example.pokusaj.Model.User;
+import com.example.pokusaj.R;
+import com.example.pokusaj.Service.MyFCMService;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+
+import io.paperdb.Paper;
 
 public class Common {
 
@@ -27,6 +49,8 @@ public class Common {
     public static final String STATE_KEY ="STATE" ;
     public static final String LAB_KEY = "LAB";
     public static final String DOKTOR_KEY = "DOKTOR";
+    public static final String TITLE_KEY = "title";
+    public static final String CONTENT_KEY = "content";
     public static Laboratory selectedLab;
     public static String IS_LOGIN="IsLogin";
     public static User currentUser;
@@ -99,5 +123,75 @@ public class Common {
     public static String formatShoppingItemName(String name) {
     return name.length()>13 ? new StringBuilder(name.substring(0,10)).append(". . .").toString():name;
 
+    }
+
+    public static void showNotification(Context context, int notification_id, String title, String content, Intent intent) {
+        PendingIntent pendingIntent=null;
+        if(intent!=null)
+            pendingIntent=PendingIntent.getActivity(context,
+                    notification_id,
+                    intent,
+                    PendingIntent.FLAG_UPDATE_CURRENT);
+        String NOTIFICATION_CHANNEL_ID="edmt_doktor_booking_channel_01";
+        NotificationManager notificationManager=(NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
+
+        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.O)
+        {
+            NotificationChannel notificationChannel=new NotificationChannel(NOTIFICATION_CHANNEL_ID,"DOKTOR BOOKING APP",NotificationManager.IMPORTANCE_DEFAULT);
+
+            notificationChannel.setDescription("Doktor app");
+            notificationChannel.enableLights(true);
+            notificationChannel.enableVibration(true);
+
+            notificationManager.createNotificationChannel(notificationChannel);
+        }
+        NotificationCompat.Builder builder=new NotificationCompat.Builder(context,NOTIFICATION_CHANNEL_ID);
+
+        builder.setContentTitle(title)
+                .setContentText(content)
+                .setAutoCancel(false)
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setLargeIcon(BitmapFactory.decodeResource(context.getResources(),R.mipmap.ic_launcher));
+
+        if(pendingIntent!=null)
+            builder.setContentIntent(pendingIntent);
+        Notification notification=builder.build();
+        notificationManager.notify(notification_id,notification);
+    }
+
+    public enum TOKEN_TYPE{
+        CLIENT,
+        DOKTOR,
+        MANAGER
+    }
+
+    public static void updateToken(Context context,String token)
+    {
+        Paper.init(context);
+        String user=Paper.book().read(Common.LOGGED_KEY);
+
+        if(user!=null)
+        {
+            if(!TextUtils.isEmpty(user))
+            {
+               MyToken myToken=new MyToken();
+                myToken.setToken(token);
+                myToken.setToken_type(TOKEN_TYPE.DOKTOR);
+                myToken.setUser(user);
+
+
+                FirebaseFirestore.getInstance()
+                        .collection("Tokens")
+                        .document(user)
+                        .set(myToken)
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+
+
+                            }
+                        });
+            }
+        }
     }
 }
