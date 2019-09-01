@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:padding="8dp"
@@ -9,6 +9,12 @@
     android:background="@color/colorBackground"
     tools:context=".DoneServicesActivity"
     >
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
     <androidx.cardview.widget.CardView
         android:padding="8dp"
         android:layout_width="match_parent"
@@ -64,13 +70,30 @@
         android:id="@+id/chip_group_services"
         />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/btn_shopping"
-        android:text="Shopping"
-        android:layout_gravity="center_horizontal"
-        />
+   <LinearLayout
+       android:weightSum="10"
+       android:orientation="horizontal"
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content">
+
+       <TextView
+           android:layout_width="0dp"
+           android:layout_height="wrap_content"
+           android:text="Extra Item"
+           android:textStyle="bold"
+           android:textSize="22sp"
+           android:layout_weight="9"
+           />
+
+       <ImageView
+           android:layout_width="0dp"
+           android:layout_height="wrap_content"
+           android:id="@+id/add_shopping"
+           android:layout_weight="1"
+           android:src="@drawable/ic_add_black_24dp"
+           />
+
+   </LinearLayout>
 
     <com.google.android.material.chip.ChipGroup
         android:layout_width="match_parent"
@@ -112,3 +135,4 @@
 
 
 </LinearLayout>
+</ScrollView>

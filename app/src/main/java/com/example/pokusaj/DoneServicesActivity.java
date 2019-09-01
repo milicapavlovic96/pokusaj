@@ -2,6 +2,7 @@ package com.example.pokusaj;
 
 import android.app.AlertDialog;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -18,8 +19,11 @@ import androidx.appcompat.widget.AppCompatAutoCompleteTextView;
 
 import com.esotericsoftware.kryo.serializers.FieldSerializer;
 import com.example.pokusaj.Common.Common;
+import com.example.pokusaj.Fragments.ShoppingFragment2;
 import com.example.pokusaj.Interface.IDoktorServicesLoadListener;
+import com.example.pokusaj.Interface.IOnShoppingItemSelected;
 import com.example.pokusaj.Model.DoktorServices;
+import com.example.pokusaj.Model.ShoppingItem;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
@@ -40,7 +44,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import dmax.dialog.SpotsDialog;
 
-public class DoneServicesActivity extends AppCompatActivity implements IDoktorServicesLoadListener {
+public class DoneServicesActivity extends AppCompatActivity implements IDoktorServicesLoadListener, IOnShoppingItemSelected {
 
     @BindView(R.id.txt_customer_name)
     TextView txt_customer_name;
@@ -60,14 +64,16 @@ public class DoneServicesActivity extends AppCompatActivity implements IDoktorSe
     @BindView(R.id.img_customer_hair)
     ImageView img_customer_hair;
 
-    @BindView(R.id.btn_shopping)
-    Button btn_shopping;
+    @BindView(R.id.add_shopping)
+    ImageView add_shopping;
 
     @BindView(R.id.btn_finish)
    Button btn_finish;
 
 AlertDialog dialog;
 IDoktorServicesLoadListener iDoktorServicesLoadListener;
+    List<ShoppingItem> shoppingItems=new ArrayList<>();
+
 
 HashSet<DoktorServices> serviceAdded=new HashSet<>();
 
@@ -79,10 +85,27 @@ LayoutInflater inflater;
 
         ButterKnife.bind(this);
         init();
-        
+
+        initView();
+
         setCustomerInformation();
 
         loadDoktorServices();
+    }
+
+    private void initView() {
+
+    getSupportActionBar().setTitle("Checkout");
+        add_shopping.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ShoppingFragment2 shoppingFragment2= ShoppingFragment2.getInstance(DoneServicesActivity.this);
+            shoppingFragment2.show(getSupportFragmentManager(),"Shopping");
+            }
+        });
+
+
+
     }
 
     private void init() {
@@ -182,5 +205,27 @@ edt_services.setOnItemClickListener(new AdapterView.OnItemClickListener() {
     public void onDoktorServicesLoadFailed(String message) {
         Toast.makeText(this,message,Toast.LENGTH_SHORT).show();
     dialog.dismiss();
+    }
+
+    @Override
+    public void onShoppingItemSelected(ShoppingItem shoppingItem) {
+        shoppingItems.add(shoppingItem);
+        Log.d("ShoppingItem",""+shoppingItems.size());
+
+
+        Chip item = (Chip) inflater.inflate(R.layout.chip_item, null);
+        item.setText(shoppingItem.getName());
+        item.setTag(shoppingItems.indexOf(shoppingItem));
+        edt_services.setText("");
+
+        item.setOnCloseIconClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                chip_group_shopping.removeView(view);
+                shoppingItems.remove((int) item.getTag());
+            }
+        });
+
+        chip_group_shopping.addView(item);
     }
 }
