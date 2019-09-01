@@ -144,7 +144,7 @@ public class HomeFragment extends Fragment implements IBannerLoadListener, ILook
                     .document(Common.currentBooking.getCityBook())
                     .collection("Branch")
                     .document(Common.currentBooking.getLabId())
-                    .collection("Doktor")
+                    .collection("Doktori")
                     .document(Common.currentBooking.getDoktorId())
                     .collection(Common.convertTimeStampToStringKey(Common.currentBooking.getTimestamp()))
                     .document(Common.currentBooking.getSlot().toString());

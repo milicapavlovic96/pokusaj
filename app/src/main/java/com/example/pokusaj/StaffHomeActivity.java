@@ -288,12 +288,12 @@ alertDialog=new SpotsDialog.Builder().setCancelable(false).setContext(this).buil
         date.add(Calendar.DATE,0);
         bookingEvent=new EventListener<QuerySnapshot>() {
             @Override
-            public void onEvent(@javax.annotation.Nullable QuerySnapshot queryDocumentSnapshots, @javax.annotation.Nullable FirebaseFirestoreException e) {
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
                 loadAvailableTimeSlotOfDoktor(Common.currentDoktor.getDoktorId(),
-                        simpleFormatDate.format(date.getTime()));
+                        Common.simpleFormatDate.format(date.getTime()));
             }
         };
-        currentBookDateCollection=doktorDoc.collection(simpleFormatDate.format(date.getTime()));
+        currentBookDateCollection=doktorDoc.collection(Common.simpleFormatDate.format(date.getTime()));
         bookingRealtimeListener=currentBookDateCollection.addSnapshotListener(bookingEvent);
 
 
@@ -312,7 +312,7 @@ alertDialog=new SpotsDialog.Builder().setCancelable(false).setContext(this).buil
         notificationEvent=new EventListener<QuerySnapshot>() {
 
             @Override
-            public void onEvent(@javax.annotation.Nullable QuerySnapshot queryDocumentSnapshots, @javax.annotation.Nullable FirebaseFirestoreException e) {
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
                 if (queryDocumentSnapshots.size() > 0)
                     loadNotification();
 
