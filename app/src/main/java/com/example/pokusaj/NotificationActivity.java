@@ -42,10 +42,11 @@ public class NotificationActivity extends AppCompatActivity implements INotifica
     int total_item=0,last_visible_item;
     boolean isLoading=false,isMaxData=false;
     DocumentSnapshot finalDoc;
-    MyNotificationAdapter2 adapter;
+
 List<MyNotification2> firstList=new ArrayList<>();
+    MyNotificationAdapter2 adapter;
 
-
+    LinearLayoutManager layoutManager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,10 +59,12 @@ List<MyNotification2> firstList=new ArrayList<>();
     }
 
     private void initView() {
+
         recycler_notification.setHasFixedSize(true);
         LinearLayoutManager layoutManager=new LinearLayoutManager(this);
         recycler_notification.setLayoutManager(layoutManager);
         recycler_notification.addItemDecoration(new DividerItemDecoration(this,layoutManager.getOrientation()));
+
 
         recycler_notification.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -90,7 +93,7 @@ List<MyNotification2> firstList=new ArrayList<>();
 
         if(lastDoc==null)
         {
-            notificationCollection.orderBy("serverTimestamp", Query.Direction.DESCENDING)
+            notificationCollection.orderBy("serverTimeStamp", Query.Direction.DESCENDING)
                     .limit(Common.MAX_NOTIFICATION_PER_LOAD)
                     .get()
                     .addOnFailureListener(new OnFailureListener() {
@@ -121,7 +124,7 @@ List<MyNotification2> firstList=new ArrayList<>();
         {
             if(!isMaxData)
             {
-                notificationCollection.orderBy("serverTimestamp", Query.Direction.DESCENDING)
+                notificationCollection.orderBy("serverTimeStamp", Query.Direction.DESCENDING)
                         .startAfter(lastDoc)
                         .limit(Common.MAX_NOTIFICATION_PER_LOAD)
                         .get()

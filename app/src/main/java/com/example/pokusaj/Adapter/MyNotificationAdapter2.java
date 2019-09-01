@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.pokusaj.Common.MyDiffCallBack;
@@ -44,6 +45,7 @@ public class MyNotificationAdapter2 extends RecyclerView.Adapter<MyNotificationA
 
         holder.txt_notification_content.setText(myNotificationList.get(position).getContent());
     }
+
 
     @Override
     public int getItemCount() {

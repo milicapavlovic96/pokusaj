@@ -4,11 +4,21 @@ import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.FieldValue;
 
 public class MyNotification2 {
+
     private String uid,title,content;
     private boolean read;
-    private Timestamp serverTimestamp;
+    private Timestamp serverTimeStamp;
+
+    public Timestamp getServerTimeStamp() {
+        return serverTimeStamp;
+    }
+
+    public void setServerTimeStamp(Timestamp serverTimeStamp) {
+        this.serverTimeStamp = serverTimeStamp;
+    }
 
     public MyNotification2() {
+
     }
 
     public String getUid() {
@@ -42,12 +52,5 @@ public class MyNotification2 {
     public void setRead(boolean read) {
         this.read = read;
     }
-
-    public Timestamp getServerTimeStamp() {
-        return serverTimestamp;
-    }
-
-    public void setServerTimeStamp(Timestamp serverTimestamp) {
-        this.serverTimestamp = serverTimestamp;
-    }
 }
+
