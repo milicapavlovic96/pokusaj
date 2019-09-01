@@ -116,7 +116,7 @@ public class Common {
                 return "18:30-19:00";
             default:
                 return "Closed";
-
+   
   }
     }
 
