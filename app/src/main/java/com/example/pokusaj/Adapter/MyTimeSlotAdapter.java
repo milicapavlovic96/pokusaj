@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -13,38 +14,45 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.pokusaj.Common.Common;
+import com.example.pokusaj.DoneServicesActivity;
 import com.example.pokusaj.Interface.IRecyclerItemSelectedListener;
+import com.example.pokusaj.Model.BookingInformation;
 import com.example.pokusaj.Model.TimeSlot;
 import com.example.pokusaj.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MyTimeSlotAdapter extends RecyclerView.Adapter<MyTimeSlotAdapter.MyViewHolder> {
 
-   Context context;
-   List<TimeSlot> timeSlotList;
-   List<CardView> cardViewList;
-   LocalBroadcastManager localBroadcastManager;
+    Context context;
+    List<TimeSlot> timeSlotList;
+    List<CardView> cardViewList;
+    LocalBroadcastManager localBroadcastManager;
 
 
     public MyTimeSlotAdapter(Context context) {
         this.context = context;
-        this.timeSlotList=new ArrayList<>();
-        this.localBroadcastManager=LocalBroadcastManager.getInstance(context);
-        cardViewList=new ArrayList<>();
+        this.timeSlotList = new ArrayList<>();
+        this.localBroadcastManager = LocalBroadcastManager.getInstance(context);
+        cardViewList = new ArrayList<>();
     }
 
     public MyTimeSlotAdapter(Context context, List<TimeSlot> timeSlotList) {
         this.context = context;
         this.timeSlotList = timeSlotList;
-        this.localBroadcastManager=LocalBroadcastManager.getInstance(context);
-        cardViewList=new ArrayList<>();
+        this.localBroadcastManager = LocalBroadcastManager.getInstance(context);
+        cardViewList = new ArrayList<>();
     }
 
 
-    public class MyViewHolder  extends RecyclerView.ViewHolder implements View.OnClickListener {
-        TextView txt_time_slot,txt_time_slot_description;
+    public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        TextView txt_time_slot, txt_time_slot_description;
         CardView card_time_slot;
 
         IRecyclerItemSelectedListener iRecyclerItemSelectedListener;
@@ -55,9 +63,9 @@ public class MyTimeSlotAdapter extends RecyclerView.Adapter<MyTimeSlotAdapter.My
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
-            card_time_slot=(CardView)itemView.findViewById(R.id.card_time_slot);
-            txt_time_slot=(TextView)itemView.findViewById(R.id.txt_time_slot);
-            txt_time_slot_description=(TextView)itemView.findViewById(R.id.txt_time_slot_description);
+            card_time_slot = (CardView) itemView.findViewById(R.id.card_time_slot);
+            txt_time_slot = (TextView) itemView.findViewById(R.id.txt_time_slot);
+            txt_time_slot_description = (TextView) itemView.findViewById(R.id.txt_time_slot_description);
 
             itemView.setOnClickListener(this);
 
@@ -65,7 +73,7 @@ public class MyTimeSlotAdapter extends RecyclerView.Adapter<MyTimeSlotAdapter.My
 
         @Override
         public void onClick(View view) {
-            iRecyclerItemSelectedListener.onItemSelectedListener(view,getAdapterPosition());
+            iRecyclerItemSelectedListener.onItemSelectedListener(view, getAdapterPosition());
         }
     }
 
@@ -73,7 +81,7 @@ public class MyTimeSlotAdapter extends RecyclerView.Adapter<MyTimeSlotAdapter.My
     @NonNull
     @Override
     public MyTimeSlotAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View itemView= LayoutInflater.from(context).inflate(R.layout.layout_time_slot,parent,false);
+        View itemView = LayoutInflater.from(context).inflate(R.layout.layout_time_slot, parent, false);
 
 
         return new MyViewHolder(itemView);
@@ -89,8 +97,7 @@ public class MyTimeSlotAdapter extends RecyclerView.Adapter<MyTimeSlotAdapter.My
             holder.txt_time_slot_description.setText("Available");
             holder.txt_time_slot_description.setTextColor(context.getResources().getColor(android.R.color.black));
             holder.txt_time_slot.setTextColor(context.getResources().getColor(android.R.color.black));
-        }
-        else {
+        } else {
             for (TimeSlot slotValue : timeSlotList) {
                 int slot = Integer.parseInt(slotValue.getSlot().toString());
                 if (slot == position) {
@@ -106,35 +113,33 @@ public class MyTimeSlotAdapter extends RecyclerView.Adapter<MyTimeSlotAdapter.My
             }
         }
         //ADD all card to list
-        if(!cardViewList.contains(holder.card_time_slot))
+        if (!cardViewList.contains(holder.card_time_slot))
             cardViewList.add(holder.card_time_slot);
         //check if time slot is available
 
-            holder.setiRecyclerItemSelectedListener(new IRecyclerItemSelectedListener() {
-                @Override
-                public void onItemSelectedListener(View view, int pos) {
-                    for (CardView cardView : cardViewList) {
-                        if (cardView.getTag() == null)
-                            cardView.setCardBackgroundColor(context.getResources()
-                                    .getColor(android.R.color.white));
-                    }
-                    holder.card_time_slot.setCardBackgroundColor(context.getResources()
-                            .getColor(android.R.color.holo_orange_dark));
-                    //send broadcast to enable button next
-                    Intent intent = new Intent(Common.KEY_ENABLE_BUTTON_NEXT);
-                    intent.putExtra(Common.KEY_TIME_SLOT, position);
-                    intent.putExtra(Common.KEY_STEP, 3);
-                    localBroadcastManager.sendBroadcast(intent);
+        holder.setiRecyclerItemSelectedListener(new IRecyclerItemSelectedListener() {
+            @Override
+            public void onItemSelectedListener(View view, int pos) {
+                for (CardView cardView : cardViewList) {
+                    if (cardView.getTag() == null)
+                        cardView.setCardBackgroundColor(context.getResources()
+                                .getColor(android.R.color.white));
                 }
+                holder.card_time_slot.setCardBackgroundColor(context.getResources()
+                        .getColor(android.R.color.holo_orange_dark));
+                //send broadcast to enable button next
+                Intent intent = new Intent(Common.KEY_ENABLE_BUTTON_NEXT);
+                intent.putExtra(Common.KEY_TIME_SLOT, position);
+                intent.putExtra(Common.KEY_STEP, 3);
+                localBroadcastManager.sendBroadcast(intent);
+            }
 
-            });
-        }
+        });
+    }
 
 
     @Override
     public int getItemCount() {
         return Common.TIME_SLOT_TOTAL;
     }
-
-
 }

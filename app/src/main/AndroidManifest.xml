@@ -30,6 +30,8 @@
         <activity android:name=".StaffMainActivity" />
         <activity android:name=".LabListActivity" />
         <activity android:name=".StaffHomeActivity" />
+        <activity android:name=".DoneServicesActivity" />
+
 
         <meta-data
             android:name="com.facebook.accountkit.ApplicationName"

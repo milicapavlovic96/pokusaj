@@ -20,10 +20,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.esotericsoftware.kryo.serializers.FieldSerializer;
 import com.example.pokusaj.Adapter.MyTimeSlotAdapter;
+import com.example.pokusaj.Adapter.MyTimeSlotAdapter2;
 import com.example.pokusaj.Common.Common;
 import com.example.pokusaj.Common.SpacesItemDecoration;
 import com.example.pokusaj.Interface.INotificationCountListener;
 import com.example.pokusaj.Interface.ITimeSlotLoadListener;
+import com.example.pokusaj.Model.BookingInformation;
 import com.example.pokusaj.Model.TimeSlot;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -242,9 +244,9 @@ alertDialog=new SpotsDialog.Builder().setCancelable(false).setContext(this).buil
                                     if (querySnapshot.isEmpty())
                                         iTimeSlotLoadListener.onTimeSlotLoadEmpty();
                                     else {
-                                        List<TimeSlot> timeSlot = new ArrayList<>();
+                                        List<BookingInformation> timeSlot = new ArrayList<>();
                                         for (QueryDocumentSnapshot document : task.getResult())
-                                            timeSlot.add(document.toObject(TimeSlot.class));
+                                            timeSlot.add(document.toObject(BookingInformation.class));
                                         iTimeSlotLoadListener.onTimeSlotLoadSuccess(timeSlot);
 
 
@@ -344,8 +346,8 @@ notificationListener=notificationCollection.whereEqualTo("read",false)
     }
 
     @Override
-    public void onTimeSlotLoadSuccess(List<TimeSlot> timeSlotList) {
-        MyTimeSlotAdapter adapter=new MyTimeSlotAdapter(this,timeSlotList);
+    public void onTimeSlotLoadSuccess(List<BookingInformation> timeSlotList) {
+        MyTimeSlotAdapter2 adapter=new MyTimeSlotAdapter2(this,timeSlotList);
         recycler_time_slot.setAdapter(adapter);
         alertDialog.dismiss();
     }

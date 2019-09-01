@@ -71,6 +71,7 @@ public class Common {
     public static SimpleDateFormat simpleFormatDate=new SimpleDateFormat("dd_MM_yyyy");
     public static BookingInformation currentBooking;
     public static String currentBookingId="";
+    public static BookingInformation currentBookingInformation;
 
     public static String convertTimeSlotToString(int position) {
         switch (position){
@@ -116,7 +117,7 @@ public class Common {
                 return "18:30-19:00";
             default:
                 return "Closed";
-   
+
   }
     }
 

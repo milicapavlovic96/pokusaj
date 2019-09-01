@@ -20,9 +20,11 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.pokusaj.Adapter.MyTimeSlotAdapter;
+import com.example.pokusaj.Adapter.MyTimeSlotAdapter2;
 import com.example.pokusaj.Common.Common;
 import com.example.pokusaj.Common.SpacesItemDecoration;
 import com.example.pokusaj.Interface.ITimeSlotLoadListener;
+import com.example.pokusaj.Interface.ITimeSlotLoadListener2;
 import com.example.pokusaj.Model.TimeSlot;
 import com.example.pokusaj.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -49,10 +51,10 @@ import devs.mulham.horizontalcalendar.HorizontalCalendarView;
 import devs.mulham.horizontalcalendar.utils.HorizontalCalendarListener;
 import dmax.dialog.SpotsDialog;
 
-public class BookingStep3Fragment extends Fragment implements ITimeSlotLoadListener {
+public class BookingStep3Fragment extends Fragment implements ITimeSlotLoadListener2 {
 
     DocumentReference doktorDoc;
-    ITimeSlotLoadListener iTimeSlotLoadListener;
+    ITimeSlotLoadListener2 iTimeSlotLoadListener;
     AlertDialog dialog;
 
     Unbinder unbinder;
