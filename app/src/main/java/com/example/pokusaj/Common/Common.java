@@ -55,6 +55,8 @@ public class Common {
     public static final String KEY_CONFIRM_BOOKING = "CONFIRM_BOOKING";
     public static final String EVENT_URI_CACHE = "URI_EVENT_SAVE";
     public static final String LOGGED_KEY = "LOGGED";
+    public static final String LOGGED_KEY2 = "UserLogged";
+
     public static final String STATE_KEY ="STATE" ;
     public static final String LAB_KEY = "LAB";
     public static final String DOKTOR_KEY = "DOKTOR";
@@ -65,6 +67,7 @@ public class Common {
     public static final double DEFAULT_PRICE = 30;
     public static final String MONEY_SIGN = " din ";
     public static final String SHOPPING_LIST = "SHOPPING_LIST_ITEMS";
+    public static final String IMAGE_DOWNLOADABLE_URL = "DOWNLOADABLE_URL";
     public static Laboratory selectedLab;
     public static String IS_LOGIN="IsLogin";
     public static User currentUser;
@@ -266,8 +269,11 @@ public class Common {
             }
         }
     }
-    public static void updateToken2(String s)
+    public static void updateToken2(Context context,final String s)
     {
+
+
+
         AccessToken accessToken= AccountKit.getCurrentAccessToken();
 
         if(accessToken!=null)
@@ -299,5 +305,31 @@ public class Common {
                 }
             });
         }
+        else
+        {
+            Paper.init(context);
+            String user=Paper.book().read(Common.LOGGED_KEY2);
+            if(user!=null)
+            {
+                if(!TextUtils.isEmpty(user))
+                {
+                    MyToken myToken = new MyToken();
+                    myToken.setToken(s);
+                    myToken.setToken_type(TOKEN_TYPE.CLIENT);
+                    myToken.setUserPhone(user);
+
+                    FirebaseFirestore.getInstance()
+                            .collection("Tokens")
+                            .document(user)
+                            .set(myToken)
+                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+
+                                }
+                            });
+                }
+            }
+        }
+        }
     }
-}

@@ -47,7 +47,10 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.nex3z.notificationbadge.NotificationBadge;
@@ -236,6 +239,9 @@ public class HomeFragment extends Fragment implements IBannerLoadListener, ILook
     IBookingInfoLoadListener iBookingInfoLoadListener;
     IBookingInformationChangeListener iBookingInformationChangeListener;
 
+    ListenerRegistration userBookingListener=null;
+    com.google.firebase.firestore.EventListener<QuerySnapshot> userBookingEvent=null;
+
     public HomeFragment() {
         bannerRef= FirebaseFirestore.getInstance().collection("Banner");
         lookbookRef=FirebaseFirestore.getInstance().collection("Lookbook");
@@ -293,7 +299,14 @@ public class HomeFragment extends Fragment implements IBannerLoadListener, ILook
             }
         });
 
-
+        if(userBookingEvent!=null)
+        {
+            if(userBookingListener==null)
+            {
+                userBookingListener=userBooking
+                        .addSnapshotListener(userBookingEvent);
+            }
+        }
     }
 
     @Override
@@ -325,12 +338,27 @@ unbinder= ButterKnife.bind(this,view);
             setUserInformation();
             loadBanner();
             loadLookBook();
+            initRealtimeUserBooking();
             loadUserBooking();
             countCartItem();
         }
 
 return view;
 
+    }
+
+    private void initRealtimeUserBooking() {
+        if(userBookingEvent==null)
+        {
+            userBookingEvent=new EventListener<QuerySnapshot>() {
+
+
+                @Override
+                public void onEvent(@javax.annotation.Nullable QuerySnapshot queryDocumentSnapshots, @javax.annotation.Nullable FirebaseFirestoreException e) {
+                    loadUserBooking();
+                }
+            };
+        }
     }
 
     private void countCartItem() {
@@ -451,5 +479,12 @@ return view;
     @Override
     public void onCartItemCountSuccess(int count) {
         notificationBadge.setText(String.valueOf(count));
+    }
+
+    @Override
+    public void onDestroy() {
+        if(userBookingListener!=null)
+            userBookingListener.remove();
+        super.onDestroy();
     }
 }

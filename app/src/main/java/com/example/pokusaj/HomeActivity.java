@@ -37,6 +37,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import dmax.dialog.SpotsDialog;
+import io.paperdb.Paper;
 
 
 public class HomeActivity extends AppCompatActivity {
@@ -63,7 +64,10 @@ public class HomeActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(Account account) {
                         if (account != null) {
-                            dialog.dismiss();//*
+
+                            Paper.init(HomeActivity.this);
+                            Paper.book().write(Common.LOGGED_KEY,account.getPhoneNumber().toString());
+
                             DocumentReference currentUser = userRef.document(account.getPhoneNumber().toString());
                             currentUser.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                                 @Override

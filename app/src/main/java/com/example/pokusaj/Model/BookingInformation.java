@@ -3,7 +3,7 @@ package com.example.pokusaj.Model;
 import com.google.firebase.Timestamp;
 
 public class BookingInformation {
-String cityBook, customerName,customerPhone,time,doktorId,doktorName,labId,labName,labAddress;
+String bookingId, cityBook, customerName,customerPhone,time,doktorId,doktorName,labId,labName,labAddress;
 private Long slot;
 private Timestamp timestamp;
 private boolean done;
@@ -117,5 +117,13 @@ private boolean done;
 
     public void setCityBook(String cityBook) {
         this.cityBook = cityBook;
+    }
+
+    public String getBookingId() {
+        return bookingId;
+    }
+
+    public void setBookingId(String bookingId) {
+        this.bookingId = bookingId;
     }
 }

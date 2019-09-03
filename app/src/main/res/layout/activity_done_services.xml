@@ -112,12 +112,36 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             >
+            <RadioGroup
+                android:gravity="center_vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+<RadioButton
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:id="@+id/rdi_no_picture"
+    android:text="No Picture"
+    android:checked="true"
+
+    />
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/rdi_picture"
+                    android:text="Picture"
+                    android:checked="true"
+
+                    />
+
+            </RadioGroup>
 
             <ImageView
                 android:layout_width="150dp"
                 android:layout_height="150dp"
                 android:id="@+id/img_customer_hair"
                 android:src="@drawable/ic_image_black_24dp"
+                android:visibility="gone"
                 />
 
 
@@ -129,7 +153,6 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:enabled="false"
         android:text="Finish"
         android:id="@+id/btn_finish"
         />

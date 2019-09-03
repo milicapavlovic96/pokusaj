@@ -28,5 +28,8 @@ public class MyFCMService extends FirebaseMessagingService {
                 remoteMessage.getData().get(Common.CONTENT_KEY),
                 null
                 );
+
+        //dataSend.put("update_done","true");
+
     }
 }

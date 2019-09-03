@@ -33,6 +33,11 @@ public class MyTimeSlotAdapter2  extends RecyclerView.Adapter<MyTimeSlotAdapter2
     List<CardView> cardViewList;
     LocalBroadcastManager localBroadcastManager;
 
+    IRecyclerItemSelectedListener iRecyclerItemSelectedListener;
+
+    public IRecyclerItemSelectedListener getiRecyclerItemSelectedListener() {
+        return iRecyclerItemSelectedListener;
+    }
 
     public MyTimeSlotAdapter2(Context context) {
         this.context = context;
@@ -54,6 +59,10 @@ public class MyTimeSlotAdapter2  extends RecyclerView.Adapter<MyTimeSlotAdapter2
         CardView card_time_slot;
 
         IRecyclerItemSelectedListener iRecyclerItemSelectedListener;
+
+        public IRecyclerItemSelectedListener getiRecyclerItemSelectedListener() {
+            return iRecyclerItemSelectedListener;
+        }
 
         public void setiRecyclerItemSelectedListener(IRecyclerItemSelectedListener iRecyclerItemSelectedListener) {
             this.iRecyclerItemSelectedListener = iRecyclerItemSelectedListener;
@@ -110,55 +119,73 @@ public class MyTimeSlotAdapter2  extends RecyclerView.Adapter<MyTimeSlotAdapter2
             for (BookingInformation slotValue : timeSlotList) {
                 int slot = Integer.parseInt(slotValue.getSlot().toString());
                 if (slot == position) {
-                    holder.card_time_slot.setTag(Common.DISABLE_TAG);
-                    holder.card_time_slot.setCardBackgroundColor(context.getResources().getColor(android.R.color.darker_gray));
-                    holder.txt_time_slot_description.setText("Full");
-                    holder.txt_time_slot_description.setTextColor(context.getResources().getColor(android.R.color.white));
-                    holder.txt_time_slot.setTextColor(context.getResources().getColor(android.R.color.white));
-//                    holder.card_time_slot.setEnabled(false);
-                    holder.setiRecyclerItemSelectedListener(new IRecyclerItemSelectedListener() {
-                        @Override
-                        public void onItemSelectedListener(View view, int pos) {
-                            //here we get booking info and store to common.current booking info,after that done services activity
-                            FirebaseFirestore.getInstance()
-                                    .collection("AllLaboratories")
-                                    .document(Common.state_name)
-                                    .collection("Branch")
-                                    .document(Common.selectedLab.getLabId())
-                                    .collection("Doktori")
-                                    .document(Common.currentDoktor.getDoktorId())
-                                    .collection(Common.simpleFormatDate.format(Common.bookingDate.getTime()))
-                                    .document(slotValue.getSlot().toString())
-                                    .get()
-                                    .addOnFailureListener(new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(@NonNull Exception e) {
-                                            Toast.makeText(context,e.getMessage(),Toast.LENGTH_SHORT).show();
-                                        }
-                                    }).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                    if(task.isSuccessful())
-                                    {
-                                        if(task.getResult().exists())
-                                        {
-                                            Common.currentBookingInformation=task.getResult().toObject(BookingInformation.class);
-                                            context.startActivity(new Intent(context, DoneServicesActivity.class));
 
+                    if (!slotValue.isDone()) {
+                        holder.card_time_slot.setTag(Common.DISABLE_TAG);
+                        holder.card_time_slot.setCardBackgroundColor(context.getResources().getColor(android.R.color.darker_gray));
+                        holder.txt_time_slot_description.setText("Full");
+                        holder.txt_time_slot_description.setTextColor(context.getResources().getColor(android.R.color.white));
+                        holder.txt_time_slot.setTextColor(context.getResources().getColor(android.R.color.white));
+//                    holder.card_time_slot.setEnabled(false);
+                        holder.setiRecyclerItemSelectedListener(new IRecyclerItemSelectedListener() {
+                            @Override
+                            public void onItemSelectedListener(View view, int pos) {
+                                //here we get booking info and store to common.current booking info,after that done services activity
+                                FirebaseFirestore.getInstance()
+                                        .collection("AllLaboratories")
+                                        .document(Common.state_name)
+                                        .collection("Branch")
+                                        .document(Common.selectedLab.getLabId())
+                                        .collection("Doktori")
+                                        .document(Common.currentDoktor.getDoktorId())
+                                        .collection(Common.simpleFormatDate.format(Common.bookingDate.getTime()))
+                                        .document(slotValue.getSlot().toString())
+                                        .get()
+                                        .addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
+                                            }
+                                        }).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            if (task.getResult().exists()) {
+                                                Common.currentBookingInformation = task.getResult().toObject(BookingInformation.class);
+                                                Common.currentBookingInformation.setBookingId(task.getResult().getId());
+                                                context.startActivity(new Intent(context, DoneServicesActivity.class));
+
+                                            }
                                         }
                                     }
+                                });
+                            }
+                        });
+                    } else
+                        {
+                            //if service is done
+                            holder.card_time_slot.setTag(Common.DISABLE_TAG);
+                            holder.card_time_slot.setCardBackgroundColor(context.getResources().getColor(android.R.color.holo_orange_dark));
+                            holder.txt_time_slot_description.setText("Done");
+                            holder.txt_time_slot_description.setTextColor(context.getResources().getColor(android.R.color.white));
+                            holder.txt_time_slot.setTextColor(context.getResources().getColor(android.R.color.white));
+                            holder.setiRecyclerItemSelectedListener(new IRecyclerItemSelectedListener() {
+                                @Override
+                                public void onItemSelectedListener(View view, int pos) {
+
                                 }
                             });
-                        }
-                    });
-                } else
-                {
-                    holder.setiRecyclerItemSelectedListener(new IRecyclerItemSelectedListener() {
-                        @Override
-                        public void onItemSelectedListener(View view, int pos) {
+                    }
+                }
+            else {
+                    if (holder.getiRecyclerItemSelectedListener()==null) {
+                        holder.setiRecyclerItemSelectedListener(new IRecyclerItemSelectedListener() {
+                            @Override
+                            public void onItemSelectedListener(View view, int pos) {
 
-                        }
-                    });
+                            }
+                        });
+                    }
                 }
             }
         }
