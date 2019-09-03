@@ -61,6 +61,10 @@ public class Common {
     public static final String TITLE_KEY = "title";
     public static final String CONTENT_KEY = "content";
     public static final int MAX_NOTIFICATION_PER_LOAD = 10;
+    public static final String SERVICES_ADDED = "SERVICES_ADDED";
+    public static final double DEFAULT_PRICE = 30;
+    public static final String MONEY_SIGN = " din ";
+    public static final String SHOPPING_LIST = "SHOPPING_LIST_ITEMS";
     public static Laboratory selectedLab;
     public static String IS_LOGIN="IsLogin";
     public static User currentUser;

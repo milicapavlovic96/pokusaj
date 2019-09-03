@@ -30,6 +30,7 @@ import androidx.appcompat.widget.AppCompatAutoCompleteTextView;
 import com.esotericsoftware.kryo.serializers.FieldSerializer;
 import com.example.pokusaj.Common.Common;
 import com.example.pokusaj.Fragments.ShoppingFragment2;
+import com.example.pokusaj.Fragments.TotalPriceFragment;
 import com.example.pokusaj.Interface.IDoktorServicesLoadListener;
 import com.example.pokusaj.Interface.IOnShoppingItemSelected;
 import com.example.pokusaj.Model.DoktorServices;
@@ -46,6 +47,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.google.gson.Gson;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -184,6 +186,13 @@ StorageReference storageReference;
                         String url=task.getResult().toString().substring(0,task.getResult().toString().indexOf("&token"));
                         Log.d("DOWNLOADABLE_LINK",url);
                         dialog.dismiss();
+
+                        TotalPriceFragment fragment=TotalPriceFragment.getInstance();
+                        Bundle bundle=new Bundle();
+                        bundle.putString(Common.SERVICES_ADDED,new Gson().toJson(serviceAdded));
+                        bundle.putString(Common.SHOPPING_LIST,new Gson().toJson(shoppingItems));
+                        fragment.setArguments(bundle);
+                        fragment.show(getSupportFragmentManager(),"Price");
                     }
                 }
             }).addOnFailureListener(new OnFailureListener() {
