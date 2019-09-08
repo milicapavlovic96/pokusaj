@@ -320,6 +320,12 @@ public class TotalPriceFragment extends BottomSheetDialogFragment {
                             Map<String,String> dataSend=new HashMap<>();
                             dataSend.put("update_done","true");
 
+                            dataSend.put(Common.RATING_STATE_KEY,Common.state_name);
+                            dataSend.put(Common.RATING_LAB_ID,Common.selectedLab.getLabId());
+                            dataSend.put(Common.RATING_LAB_NAME,Common.selectedLab.getName());
+                            dataSend.put(Common.RATING_DOKTOR_ID,Common.currentDoktor.getDoktorId());
+
+
 
                             fcmSendData.setTo(myToken.getToken());
                             fcmSendData.setData(dataSend);

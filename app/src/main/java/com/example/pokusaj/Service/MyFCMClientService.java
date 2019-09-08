@@ -16,6 +16,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+import com.google.gson.Gson;
 
 import java.sql.DriverPropertyInfo;
 import java.sql.Timestamp;
@@ -42,10 +43,15 @@ public class MyFCMClientService extends FirebaseMessagingService {
         if (remoteMessage.getData() != null) {
             if (remoteMessage.getData().get("update_done") != null) {
                 updateLastBooking();
+                Map<String,String> dataRecieved =remoteMessage.getData();
+                Paper.init(this);
+                Paper.book().write(Common.RATING_INFORMATION_KEY,new Gson().toJson(dataRecieved));
+
 
             }
             if (remoteMessage.getData().get(Common.TITLE_KEY) != null &&
-                    remoteMessage.getData().get(Common.CONTENT_KEY) != null) {
+                    remoteMessage.getData().get(Common.CONTENT_KEY) != null)
+            {
                 Common.showNotification2(this, new Random().nextInt(),
                         remoteMessage.getData().get(Common.TITLE_KEY),
                         remoteMessage.getData().get(Common.CONTENT_KEY), null

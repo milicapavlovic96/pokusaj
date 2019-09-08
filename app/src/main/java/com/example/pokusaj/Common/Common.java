@@ -1,11 +1,13 @@
 package com.example.pokusaj.Common;
 
+import android.app.AlertDialog;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -14,12 +16,19 @@ import android.net.Uri;
 import android.os.Build;
 import android.provider.OpenableColumns;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.AppCompatRatingBar;
 import androidx.core.app.NotificationCompat;
 
+import com.example.pokusaj.HomeActivity;
 import com.example.pokusaj.Model.BookingInformation;
 import com.example.pokusaj.Model.Doktor;
+import com.example.pokusaj.Model.Doktor2;
 import com.example.pokusaj.Model.Laboratory;
 import com.example.pokusaj.Model.MyToken;
 import com.example.pokusaj.Model.User;
@@ -31,13 +40,18 @@ import com.facebook.accountkit.AccountKit;
 import com.facebook.accountkit.AccountKitCallback;
 import com.facebook.accountkit.AccountKitError;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import io.paperdb.Paper;
 
@@ -68,6 +82,11 @@ public class Common {
     public static final String MONEY_SIGN = " din ";
     public static final String SHOPPING_LIST = "SHOPPING_LIST_ITEMS";
     public static final String IMAGE_DOWNLOADABLE_URL = "DOWNLOADABLE_URL";
+    public static final String RATING_STATE_KEY = "RATING_STATE";
+    public static final String RATING_LAB_ID = "RATING_LAB_ID";
+    public static final String RATING_LAB_NAME = "RATING_LAB_NAME";
+    public static final String RATING_DOKTOR_ID = "RATING_DOKTOR_ID";
+    public static final String RATING_INFORMATION_KEY = "RATING_INFORMATION";
     public static Laboratory selectedLab;
     public static String IS_LOGIN="IsLogin";
     public static User currentUser;
@@ -234,7 +253,99 @@ public class Common {
         return result;
     }
 
-    public enum TOKEN_TYPE{
+    public static void showRatingDialog(Context context, String stateName, String labID, String labName, String doktorId) {
+        DocumentReference doktorNeedRateRef=FirebaseFirestore.getInstance()
+                .collection("AllLaboratories")
+                .document(stateName)
+                .collection("Branch")
+                .document(labID)
+                .collection("Doktori")
+                .document(doktorId);
+
+        doktorNeedRateRef.get().addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(context,""+e.getMessage(),Toast.LENGTH_SHORT).show();
+            }
+        }).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if(task.isSuccessful())
+                {
+            Doktor doktorRate=task.getResult().toObject(Doktor.class);
+                doktorRate.setDoktorId(task.getResult().getId());
+
+                View view= LayoutInflater.from(context)
+                        .inflate(R.layout.layout_rating_dialog,null);
+
+                    TextView txt_lab_name=(TextView)view.findViewById(R.id.txt_laboratory_name);
+                    TextView txt_doktor_name=(TextView)view.findViewById(R.id.txt_doktor_name);
+
+                    AppCompatRatingBar  ratingBar=(AppCompatRatingBar)view.findViewById(R.id.rating);
+
+
+                    //set info
+
+                    txt_doktor_name.setText(doktorRate.getName());
+                    txt_doktor_name.setText(labName);
+
+                    AlertDialog.Builder builder=new AlertDialog.Builder(context)
+                            .setView(view)
+                            .setCancelable(false)
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                        Double original_rating=doktorRate.getRating();
+                                        Long ratingTimes=doktorRate.getRatingTimes();
+                                        float userRating=ratingBar.getRating();
+
+                                        Double finalRating=(original_rating+userRating);
+                                        Map<String,Object> data_update=new HashMap<>();
+                                        data_update.put("rating",finalRating);
+                                        data_update.put("ratingTimes",++ratingTimes);
+
+                                        doktorNeedRateRef.update(data_update)
+                                                .addOnFailureListener(new OnFailureListener() {
+                                                    @Override
+                                                    public void onFailure(@NonNull Exception e) {
+                                                        Toast.makeText(context,""+e.getMessage(),Toast.LENGTH_SHORT).show();
+                                                    }
+                                                }).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                if(task.isSuccessful())
+                                                {
+                                                    Toast.makeText(context,"Hvala na oceni!",Toast.LENGTH_SHORT).show();
+                                                Paper.init(context);
+                                                Paper.book().delete(Common.RATING_INFORMATION_KEY);
+
+                                                }
+                                            }
+                                        });
+                                }
+                            }).setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    dialogInterface.dismiss();
+                                }
+                            }).setNeutralButton("NEVER", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                        Paper.init(context);
+                                        Paper.book().delete(Common.RATING_INFORMATION_KEY);
+                                }
+                            });
+
+                    AlertDialog dialog=builder.create();
+                    dialog.show();
+                }
+            }
+        });
+
+
+    }
+
+    public static enum TOKEN_TYPE{
         CLIENT,
         DOKTOR,
         MANAGER
@@ -271,6 +382,7 @@ public class Common {
     }
     public static void updateToken2(Context context,final String s)
     {
+
 
 
 

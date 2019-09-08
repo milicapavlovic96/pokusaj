@@ -47,7 +47,10 @@ public class MyDoktorAdapter extends RecyclerView.Adapter<MyDoktorAdapter.MyView
     @Override
     public void onBindViewHolder(@NonNull MyDoktorAdapter.MyViewHolder holder, int position) {
         holder.txt_doktor_name.setText(doktorList.get(position).getName());
-        holder.ratingBar.setRating((float)doktorList.get(position).getRating());
+        if(doktorList.get(position).getRatingTimes()!=null)
+            holder.ratingBar.setRating(doktorList.get(position).getRating().floatValue() / doktorList.get(position).getRatingTimes());
+        else
+            holder.ratingBar.setRating(0);
         if(!cardViewList.contains(holder.card_doktor))
             cardViewList.add(holder.card_doktor);
 //set background

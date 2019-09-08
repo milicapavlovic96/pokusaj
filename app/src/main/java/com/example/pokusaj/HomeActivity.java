@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment;
 
 import android.app.AlertDialog;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -33,6 +34,10 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -48,6 +53,36 @@ public class HomeActivity extends AppCompatActivity {
     CollectionReference userRef;
 
     AlertDialog dialog;
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        checkRatingDialog();
+    }
+
+    private void checkRatingDialog() {
+        Paper.init(this);
+        String dataSerialized=Paper.book().read(Common.RATING_INFORMATION_KEY,"");
+    if(!TextUtils.isEmpty(dataSerialized))
+    {
+        Map<String,String> dataRecieved=new Gson()
+                .fromJson(dataSerialized,new TypeToken<Map<String,String>>(){}.getType());
+
+        if(dataRecieved!=null){
+            Common.showRatingDialog(HomeActivity.this,
+                    dataRecieved.get(Common.RATING_STATE_KEY),
+                    dataRecieved.get(Common.RATING_LAB_ID),
+                    dataRecieved.get(Common.RATING_LAB_NAME),
+                    dataRecieved.get(Common.RATING_DOKTOR_ID));
+
+
+
+
+        }
+        }
+    }
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,7 +101,7 @@ public class HomeActivity extends AppCompatActivity {
                         if (account != null) {
 
                             Paper.init(HomeActivity.this);
-                            Paper.book().write(Common.LOGGED_KEY,account.getPhoneNumber().toString());
+                            Paper.book().write(Common.LOGGED_KEY2,account.getPhoneNumber().toString());
 
                             DocumentReference currentUser = userRef.document(account.getPhoneNumber().toString());
                             currentUser.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -90,6 +125,7 @@ public class HomeActivity extends AppCompatActivity {
                                         }
                                         if(dialog.isShowing())
                                             dialog.dismiss();
+
 
                                     }
 

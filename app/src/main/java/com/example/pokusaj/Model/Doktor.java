@@ -6,9 +6,12 @@ import android.os.Parcelable;
 
 public class Doktor implements Parcelable {
    private String name,username,password,labId,doktorId;
-    private Long rating;
+    private Double rating;
+    private Long ratingTimes;
 
-   public String getDoktorId() {
+
+
+    public String getDoktorId() {
         return doktorId;
     }
 
@@ -19,6 +22,14 @@ public class Doktor implements Parcelable {
     public Doktor() {
     }
 
+
+    public Long getRatingTimes() {
+        return ratingTimes;
+    }
+
+    public void setRatingTimes(Long ratingTimes) {
+        this.ratingTimes = ratingTimes;
+    }
     protected Doktor(Parcel in) {
         name = in.readString();
         username = in.readString();
@@ -27,7 +38,7 @@ public class Doktor implements Parcelable {
         if (in.readByte() == 0) {
             rating = null;
         } else {
-            rating = in.readLong();
+            rating = in.readDouble();
         }
     }
 
@@ -67,11 +78,11 @@ public class Doktor implements Parcelable {
         this.password = password;
     }
 
-    public Long getRating() {
+    public Double getRating() {
         return rating;
     }
 
-    public void setRating(Long rating) {
+    public void setRating(Double rating) {
         this.rating = rating;
     }
 
@@ -98,7 +109,7 @@ public class Doktor implements Parcelable {
             parcel.writeByte((byte) 0);
         } else {
             parcel.writeByte((byte) 1);
-            parcel.writeLong(rating);
+            parcel.writeDouble(rating);
         }
     }
 }
