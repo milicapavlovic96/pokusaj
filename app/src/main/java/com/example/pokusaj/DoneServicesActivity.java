@@ -31,6 +31,7 @@ import androidx.appcompat.widget.AppCompatAutoCompleteTextView;
 
 import com.esotericsoftware.kryo.serializers.FieldSerializer;
 import com.example.pokusaj.Common.Common;
+import com.example.pokusaj.Database.CartItem;
 import com.example.pokusaj.Fragments.ShoppingFragment2;
 import com.example.pokusaj.Fragments.TotalPriceFragment;
 import com.example.pokusaj.Interface.IBottomSheetDialogOnDismissListener;
@@ -106,7 +107,7 @@ Uri fileUri;
 
 AlertDialog dialog;
 IDoktorServicesLoadListener iDoktorServicesLoadListener;
-    List<ShoppingItem> shoppingItems=new ArrayList<>();
+   // List<ShoppingItem> shoppingItems=new ArrayList<>();
 
 
 HashSet<DoktorServices> serviceAdded=new HashSet<>();
@@ -162,7 +163,7 @@ rdi_no_picture.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeList
                 TotalPriceFragment fragment = TotalPriceFragment.getInstance(DoneServicesActivity.this);
                 Bundle bundle = new Bundle();
                 bundle.putString(Common.SERVICES_ADDED, new Gson().toJson(serviceAdded));
-                bundle.putString(Common.SHOPPING_LIST, new Gson().toJson(shoppingItems));
+               // bundle.putString(Common.SHOPPING_LIST, new Gson().toJson(shoppingItems));
                 fragment.setArguments(bundle);
                 fragment.show(getSupportFragmentManager(), "Price");
             } else {
@@ -228,7 +229,7 @@ rdi_no_picture.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeList
                         TotalPriceFragment fragment=TotalPriceFragment.getInstance(DoneServicesActivity.this);
                         Bundle bundle=new Bundle();
                         bundle.putString(Common.SERVICES_ADDED,new Gson().toJson(serviceAdded));
-                        bundle.putString(Common.SHOPPING_LIST,new Gson().toJson(shoppingItems));
+                        //bundle.putString(Common.SHOPPING_LIST,new Gson().toJson(shoppingItems));
                         bundle.putString(Common.IMAGE_DOWNLOADABLE_URL,url);
                         fragment.setArguments(bundle);
                         fragment.show(getSupportFragmentManager(),"Price");
@@ -353,7 +354,7 @@ edt_services.setOnItemClickListener(new AdapterView.OnItemClickListener() {
         }
     }
 });
-        dialog.dismiss();
+loadExtraItems();
     }
 
     @Override
@@ -364,24 +365,80 @@ edt_services.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
     @Override
     public void onShoppingItemSelected(ShoppingItem shoppingItem) {
-        shoppingItems.add(shoppingItem);
-        Log.d("ShoppingItem",""+shoppingItems.size());
+       // shoppingItems.add(shoppingItem);
+       // Log.d("ShoppingItem",""+shoppingItems.size());
 
 
-        Chip item = (Chip) inflater.inflate(R.layout.chip_item, null);
-        item.setText(shoppingItem.getName());
-        item.setTag(shoppingItems.indexOf(shoppingItem));
-        edt_services.setText("");
+        CartItem cartItem=new CartItem();
+        cartItem.setProductId(shoppingItem.getId());
+        cartItem.setProductImage(shoppingItem.getImage());
+    cartItem.setProductName(shoppingItem.getName());
+    cartItem.setProductPrice(shoppingItem.getPrice());
+    cartItem.setProductQuantity(1);
+    cartItem.setUserPhone(Common.currentBookingInformation.getCustomerPhone());
 
-        item.setOnCloseIconClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                chip_group_shopping.removeView(view);
-                shoppingItems.remove((int) item.getTag());
+    if(Common.currentBookingInformation.getCartItemList()==null)
+        Common.currentBookingInformation.setCartItemList(new ArrayList<CartItem>());
+
+    boolean flag=false;
+
+    for(int i=0;i<Common.currentBookingInformation.getCartItemList().size();i++)
+    {
+        if(Common.currentBookingInformation.getCartItemList().get(i).getProductName().equals(shoppingItem.getName()))
+        {
+            flag=true;
+            CartItem itemUpdate=Common.currentBookingInformation.getCartItemList().get(i);
+            itemUpdate.setProductQuantity(itemUpdate.getProductQuantity()+1);
+            Common.currentBookingInformation.getCartItemList().set(i,itemUpdate);
+
+        }
+    }
+if(!flag)
+{
+    Common.currentBookingInformation.getCartItemList().add(cartItem);
+
+    Chip item = (Chip) inflater.inflate(R.layout.chip_item, null);
+    item.setText(cartItem.getProductName());
+    item.setTag(Common.currentBookingInformation.getCartItemList().indexOf(cartItem));
+
+    item.setOnCloseIconClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            chip_group_shopping.removeView(view);
+Common.currentBookingInformation.getCartItemList().remove((int)item.getTag());        }
+    });
+
+    chip_group_shopping.addView(item);
+}
+else
+{
+    chip_group_shopping.removeAllViews();
+    loadExtraItems();
+}
+    }
+
+    private void loadExtraItems() {
+        if(Common.currentBookingInformation.getCartItemList()!=null)
+        {
+            for(CartItem cartItem:Common.currentBookingInformation.getCartItemList())
+            {
+                Chip item = (Chip) inflater.inflate(R.layout.chip_item, null);
+                item.setText(new StringBuilder(cartItem.getProductName())
+                .append(" x")
+                .append(cartItem.getProductQuantity()));
+                item.setTag(Common.currentBookingInformation.getCartItemList().indexOf(cartItem));
+
+                item.setOnCloseIconClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        chip_group_shopping.removeView(view);
+                        Common.currentBookingInformation.getCartItemList().remove((int)item.getTag());        }
+                });
+
+                chip_group_shopping.addView(item);
             }
-        });
-
-        chip_group_shopping.addView(item);
+        }
+        dialog.dismiss();
     }
 
     @TargetApi(Build.VERSION_CODES.N)

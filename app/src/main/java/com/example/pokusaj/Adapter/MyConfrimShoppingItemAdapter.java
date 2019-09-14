@@ -10,6 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.pokusaj.Database.CartItem;
 import com.example.pokusaj.Model.ShoppingItem;
 import com.example.pokusaj.R;
 import com.squareup.picasso.Picasso;
@@ -21,9 +22,9 @@ import butterknife.ButterKnife;
 
 public class MyConfrimShoppingItemAdapter extends RecyclerView.Adapter<MyConfrimShoppingItemAdapter.MyViewHolder> {
    Context context;
-   List<ShoppingItem> shoppingItemList;
+   List<CartItem> shoppingItemList;
 
-    public MyConfrimShoppingItemAdapter(Context context, List<ShoppingItem> shoppingItemList) {
+    public MyConfrimShoppingItemAdapter(Context context, List<CartItem> shoppingItemList) {
         this.context = context;
         this.shoppingItemList = shoppingItemList;
     }
@@ -38,9 +39,11 @@ public class MyConfrimShoppingItemAdapter extends RecyclerView.Adapter<MyConfrim
 
     @Override
     public void onBindViewHolder(@NonNull MyConfrimShoppingItemAdapter.MyViewHolder holder, int position) {
-        Picasso.get().load(shoppingItemList.get(position).getImage())
+        Picasso.get().load(shoppingItemList.get(position).getProductImage())
                 .into(holder.item_image);
-        holder.txt_name.setText(shoppingItemList.get(position).getName());
+        holder.txt_name.setText(new StringBuilder(shoppingItemList.get(position).getProductName())
+        .append(" x")
+        .append(shoppingItemList.get(position).getProductQuantity()));
     }
 
     @Override

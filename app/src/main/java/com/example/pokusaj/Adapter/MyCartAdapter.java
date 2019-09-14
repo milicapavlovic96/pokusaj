@@ -90,6 +90,12 @@ public class MyCartAdapter extends RecyclerView.Adapter<MyCartAdapter.MyViewHold
                                 .getProductQuantity()-1);
                         DatabaseUtils.updateCart(cartDatabase,cartItemList.get(pos));
                     }
+                    else if(cartItemList.get(pos).getProductQuantity()==0)
+                    {
+                        DatabaseUtils.deleteCart(cartDatabase,cartItemList.get(pos));
+                        cartItemList.remove(pos);
+                        notifyItemRemoved(pos);
+                    }
 
                 }
                 else
@@ -101,10 +107,10 @@ public class MyCartAdapter extends RecyclerView.Adapter<MyCartAdapter.MyViewHold
                                         .get(pos)
                                         .getProductQuantity()+1);
                         DatabaseUtils.updateCart(cartDatabase,cartItemList.get(pos));
+                        holder.txt_quantity.setText(new StringBuilder(String.valueOf(cartItemList.get(position).getProductQuantity())));
 
                     }
                 }
-                holder.txt_quantity.setText(new StringBuilder(String.valueOf(cartItemList.get(position).getProductQuantity())));
                 iCartItemUpdateListener.onCartItemUpdateListener();
             }
         });

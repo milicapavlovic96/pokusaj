@@ -25,6 +25,10 @@ import androidx.fragment.app.Fragment;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.example.pokusaj.Common.Common;
+import com.example.pokusaj.Database.CartDatabase;
+import com.example.pokusaj.Database.CartItem;
+import com.example.pokusaj.Database.DatabaseUtils;
+import com.example.pokusaj.Interface.ICartItemLoadListener;
 import com.example.pokusaj.Model.BookingInformation;
 import com.example.pokusaj.Model.FCMResponse;
 import com.example.pokusaj.Model.FCMSendData;
@@ -50,6 +54,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
 import java.util.UUID;
@@ -66,7 +71,7 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
-public class BookingStep4Fragment extends Fragment {
+public class BookingStep4Fragment extends Fragment implements ICartItemLoadListener {
 
 CompositeDisposable compositeDisposable=new CompositeDisposable();
 SimpleDateFormat simpleDateFormat;
@@ -97,63 +102,7 @@ IFCMApi ifcmApi;
         void confirmBooking(){
 
     dialog.show();
-    String startTime=Common.convertTimeSlotToString(Common.currentTimeSlot);
-    String[] convertTime=startTime.split("-");
-
-    String[] startTimeConvert=convertTime[0].split(":");
-    int startHourInt=Integer.parseInt(startTimeConvert[0].trim());//get 9
-    int startMinInt=Integer.parseInt(startTimeConvert[1].trim());//get 00
-
-    Calendar bookingDateWithourHouse=Calendar.getInstance();
-    bookingDateWithourHouse.setTimeInMillis(Common.bookingDate.getTimeInMillis());
-    bookingDateWithourHouse.set(Calendar.HOUR_OF_DAY,startHourInt);
-    bookingDateWithourHouse.set(Calendar.MINUTE,startMinInt);
-
-    Timestamp timestamp=new Timestamp(bookingDateWithourHouse.getTime());
-
-
-    final BookingInformation bookingInformation=new BookingInformation();
-
-    bookingInformation.setCityBook(Common.city);
-    bookingInformation.setTimestamp(timestamp);
-    bookingInformation.setDone(false);
-    bookingInformation.setDoktorId(Common.currentDoktor.getDoktorId());
-    bookingInformation.setDoktorName(Common.currentDoktor.getName());
-    bookingInformation.setCustomerName(Common.currentUser.getName());
-    bookingInformation.setCustomerPhone(Common.currentUser.getPhoneNumber());
-    bookingInformation.setLabId(Common.currentLab.getLabId());
-    bookingInformation.setLabAddress(Common.currentLab.getAddress());
-    bookingInformation.setLabName(Common.currentLab.getName());
-    bookingInformation.setTime(new StringBuilder(Common.convertTimeSlotToString(Common.currentTimeSlot))
-            .append("at")
-            .append(simpleDateFormat.format(bookingDateWithourHouse.getTime())).toString());
-    bookingInformation.setSlot(Long.valueOf(Common.currentTimeSlot));
-    DocumentReference bookingDate= FirebaseFirestore.getInstance()
-            .collection("AllLaboratories")
-            .document(Common.city)
-            .collection("Branch")
-            .document(Common.currentLab.getLabId())
-            .collection("Doktori")
-            .document(Common.currentDoktor.getDoktorId())
-            .collection(Common.simpleFormatDate.format(Common.bookingDate.getTime()))
-.document(String.valueOf(Common.currentTimeSlot));//simpleformatdate
-
-    bookingDate.set(bookingInformation)
-            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                @Override
-                public void onSuccess(Void aVoid) {
-                    addToUserBooking(bookingInformation);
-
-                }
-
-
-            }).addOnFailureListener(new OnFailureListener() {
-        @Override
-        public void onFailure(@NonNull Exception e) {
-            Toast.makeText(getContext(),""+e.getMessage(),Toast.LENGTH_SHORT).show();
-
-        }
-    });
+    DatabaseUtils.getAllCart(CartDatabase.getInstance(getContext()),this);
 }
 
     private void addToUserBooking(BookingInformation bookingInformation) {
@@ -454,5 +403,69 @@ localBroadcastManager.registerReceiver(confirmBookingReciever,new IntentFilter(C
         View itemView= inflater.inflate(R.layout.fragment_booking_step_four,container,false);
     unbinder= ButterKnife.bind(this,itemView);
         return itemView;
+    }
+
+    @Override
+    public void onGetAllItemFromCartSuccess(List<CartItem> cartItemList) {
+        String startTime=Common.convertTimeSlotToString(Common.currentTimeSlot);
+        String[] convertTime=startTime.split("-");
+
+        String[] startTimeConvert=convertTime[0].split(":");
+        int startHourInt=Integer.parseInt(startTimeConvert[0].trim());//get 9
+        int startMinInt=Integer.parseInt(startTimeConvert[1].trim());//get 00
+
+        Calendar bookingDateWithourHouse=Calendar.getInstance();
+        bookingDateWithourHouse.setTimeInMillis(Common.bookingDate.getTimeInMillis());
+        bookingDateWithourHouse.set(Calendar.HOUR_OF_DAY,startHourInt);
+        bookingDateWithourHouse.set(Calendar.MINUTE,startMinInt);
+
+        Timestamp timestamp=new Timestamp(bookingDateWithourHouse.getTime());
+
+
+        final BookingInformation bookingInformation=new BookingInformation();
+
+        bookingInformation.setCityBook(Common.city);
+        bookingInformation.setTimestamp(timestamp);
+        bookingInformation.setDone(false);
+        bookingInformation.setDoktorId(Common.currentDoktor.getDoktorId());
+        bookingInformation.setDoktorName(Common.currentDoktor.getName());
+        bookingInformation.setCustomerName(Common.currentUser.getName());
+        bookingInformation.setCustomerPhone(Common.currentUser.getPhoneNumber());
+        bookingInformation.setLabId(Common.currentLab.getLabId());
+        bookingInformation.setLabAddress(Common.currentLab.getAddress());
+        bookingInformation.setLabName(Common.currentLab.getName());
+        bookingInformation.setTime(new StringBuilder(Common.convertTimeSlotToString(Common.currentTimeSlot))
+                .append("at")
+                .append(simpleDateFormat.format(bookingDateWithourHouse.getTime())).toString());
+        bookingInformation.setSlot(Long.valueOf(Common.currentTimeSlot));
+       bookingInformation.setCartItemList(cartItemList);
+
+        DocumentReference bookingDate= FirebaseFirestore.getInstance()
+                .collection("AllLaboratories")
+                .document(Common.city)
+                .collection("Branch")
+                .document(Common.currentLab.getLabId())
+                .collection("Doktori")
+                .document(Common.currentDoktor.getDoktorId())
+                .collection(Common.simpleFormatDate.format(Common.bookingDate.getTime()))
+                .document(String.valueOf(Common.currentTimeSlot));//simpleformatdate
+
+        bookingDate.set(bookingInformation)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                       DatabaseUtils.clearCart(CartDatabase.getInstance(getContext()));
+                        addToUserBooking(bookingInformation);
+
+                    }
+
+
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(getContext(),""+e.getMessage(),Toast.LENGTH_SHORT).show();
+
+            }
+        });
     }
 }

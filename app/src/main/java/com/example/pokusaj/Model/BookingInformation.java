@@ -1,12 +1,16 @@
 package com.example.pokusaj.Model;
 
+import com.example.pokusaj.Database.CartItem;
 import com.google.firebase.Timestamp;
+
+import java.util.List;
 
 public class BookingInformation {
 String bookingId, cityBook, customerName,customerPhone,time,doktorId,doktorName,labId,labName,labAddress;
 private Long slot;
 private Timestamp timestamp;
 private boolean done;
+private List<CartItem> cartItemList;
 
     public BookingInformation() {
     }
@@ -125,5 +129,13 @@ private boolean done;
 
     public void setBookingId(String bookingId) {
         this.bookingId = bookingId;
+    }
+
+    public List<CartItem> getCartItemList() {
+        return cartItemList;
+    }
+
+    public void setCartItemList(List<CartItem> cartItemList) {
+        this.cartItemList = cartItemList;
     }
 }

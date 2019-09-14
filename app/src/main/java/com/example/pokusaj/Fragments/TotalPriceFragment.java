@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.pokusaj.Adapter.MyConfrimShoppingItemAdapter;
 import com.example.pokusaj.Common.Common;
+import com.example.pokusaj.Database.CartItem;
 import com.example.pokusaj.Interface.IBottomSheetDialogOnDismissListener;
 import com.example.pokusaj.Model.Doktor;
 import com.example.pokusaj.Model.DoktorServices;
@@ -88,7 +89,7 @@ public class TotalPriceFragment extends BottomSheetDialogFragment {
 
     HashSet<DoktorServices> servicesAdded;
 
-    List<ShoppingItem> shoppingItemList;
+    //List<ShoppingItem> shoppingItemList;
 
     IFCMService ifcmService;
 
@@ -160,12 +161,15 @@ public class TotalPriceFragment extends BottomSheetDialogFragment {
 
             }
         }
-        if(shoppingItemList.size()>0)
+        if(Common.currentBookingInformation.getCartItemList()!=null)
         {
-            MyConfrimShoppingItemAdapter adapter=new MyConfrimShoppingItemAdapter(getContext(),shoppingItemList);
-            recycler_view_shopping.setAdapter(adapter);
+            if(Common.currentBookingInformation.getCartItemList().size()>0)
+            {
+                MyConfrimShoppingItemAdapter adapter=new MyConfrimShoppingItemAdapter(getContext(),Common.currentBookingInformation.getCartItemList());
+                recycler_view_shopping.setAdapter(adapter);
+            }
+            calculatePrice();
         }
-        calculatePrice();
     }
 
     private double calculatePrice() {
@@ -173,8 +177,11 @@ public class TotalPriceFragment extends BottomSheetDialogFragment {
         double price=Common.DEFAULT_PRICE;
         for(DoktorServices services: servicesAdded)
             price+=services.getPrice();
-        for(ShoppingItem shoppingItem:shoppingItemList)
-            price+=shoppingItem.getPrice();
+        if(Common.currentBookingInformation.getCartItemList()!=null)
+        {
+            for(CartItem cartItem: Common.currentBookingInformation.getCartItemList())
+                price+=(cartItem.getProductPrice()*cartItem.getProductQuantity());
+        }
 
         txt_total_price.setText(new StringBuilder(Common.MONEY_SIGN).append(price));
 
@@ -188,9 +195,9 @@ public class TotalPriceFragment extends BottomSheetDialogFragment {
            .fromJson(arguments.getString(Common.SERVICES_ADDED),
                    new TypeToken<HashSet<DoktorServices>>(){}.getType());
 
-        this.shoppingItemList=new Gson()
-                .fromJson(arguments.getString(Common.SHOPPING_LIST),
-                        new TypeToken<List<ShoppingItem>>(){}.getType());
+//        this.shoppingItemList=new Gson()
+//                .fromJson(arguments.getString(Common.SHOPPING_LIST),
+//                        new TypeToken<List<ShoppingItem>>(){}.getType());
 
 
         image_url=arguments.getString(Common.IMAGE_DOWNLOADABLE_URL);
@@ -278,7 +285,7 @@ public class TotalPriceFragment extends BottomSheetDialogFragment {
         invoice.setImageUrl(image_url);
 
         invoice.setDoktorServices(new ArrayList<DoktorServices>(servicesAdded));
-        invoice.setShoppingItemList(shoppingItemList);
+        invoice.setShoppingItemList(Common.currentBookingInformation.getCartItemList());
         invoice.setFinalPrice(calculatePrice());
 
 
