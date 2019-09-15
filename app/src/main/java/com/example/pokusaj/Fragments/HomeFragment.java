@@ -348,6 +348,15 @@ unbinder= ButterKnife.bind(this,view);
             loadUserBooking();
             countCartItem();
         }
+        else if(Common.currentUser!=null){
+            setUserInformation();
+            loadBanner();
+            loadLookBook();
+            initRealtimeUserBooking();
+            loadUserBooking();
+            countCartItem();
+        }
+
 
 return view;
 

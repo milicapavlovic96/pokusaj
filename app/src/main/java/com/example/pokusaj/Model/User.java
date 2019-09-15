@@ -1,14 +1,14 @@
 package com.example.pokusaj.Model;
 
 public class User {
-    private String name,address,phoneNumber;
+    private String name,password,phoneNumber;
     public User(){
 
     }
 
-    public User(String name, String address, String phoneNumber){
+    public User(String name, String password, String phoneNumber){
         this.name=name;
-        this.address=address;
+        this.password=password;
         this.phoneNumber=phoneNumber;
 
     }
@@ -21,12 +21,12 @@ public class User {
         this.name = name;
     }
 
-    public String getAddress() {
-        return address;
+    public String getPassword() {
+        return password;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getPhoneNumber() {

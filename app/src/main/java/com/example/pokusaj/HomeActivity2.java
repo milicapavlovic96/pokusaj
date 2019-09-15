@@ -1,24 +1,21 @@
 package com.example.pokusaj;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-
 import android.app.AlertDialog;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 
 import com.example.pokusaj.Common.Common;
 import com.example.pokusaj.Fragments.HomeFragment;
 import com.example.pokusaj.Fragments.ShoppingFragment;
 import com.example.pokusaj.Model.User;
-import com.example.pokusaj.R;
 import com.facebook.accountkit.Account;
 import com.facebook.accountkit.AccountKit;
 import com.facebook.accountkit.AccountKitCallback;
@@ -44,9 +41,7 @@ import butterknife.ButterKnife;
 import dmax.dialog.SpotsDialog;
 import io.paperdb.Paper;
 
-
-public class HomeActivity extends AppCompatActivity {
-
+public class HomeActivity2 extends AppCompatActivity {
     @BindView(R.id.bottom_navigation)
     BottomNavigationView bottomNavigationView;
     BottomSheetDialog bottomSheetDialog;
@@ -63,22 +58,22 @@ public class HomeActivity extends AppCompatActivity {
     private void checkRatingDialog() {
         Paper.init(this);
         String dataSerialized=Paper.book().read(Common.RATING_INFORMATION_KEY,"");
-    if(!TextUtils.isEmpty(dataSerialized))
-    {
-        Map<String,String> dataRecieved=new Gson()
-                .fromJson(dataSerialized,new TypeToken<Map<String,String>>(){}.getType());
+        if(!TextUtils.isEmpty(dataSerialized))
+        {
+            Map<String,String> dataRecieved=new Gson()
+                    .fromJson(dataSerialized,new TypeToken<Map<String,String>>(){}.getType());
 
-        if(dataRecieved!=null){
-            Common.showRatingDialog(HomeActivity.this,
-                    dataRecieved.get(Common.RATING_STATE_KEY),
-                    dataRecieved.get(Common.RATING_LAB_ID),
-                    dataRecieved.get(Common.RATING_LAB_NAME),
-                    dataRecieved.get(Common.RATING_DOKTOR_ID));
-
-
+            if(dataRecieved!=null){
+                Common.showRatingDialog(HomeActivity2.this,
+                        dataRecieved.get(Common.RATING_STATE_KEY),
+                        dataRecieved.get(Common.RATING_LAB_ID),
+                        dataRecieved.get(Common.RATING_LAB_NAME),
+                        dataRecieved.get(Common.RATING_DOKTOR_ID));
 
 
-        }
+
+
+            }
         }
     }
 
@@ -87,7 +82,7 @@ public class HomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        ButterKnife.bind(HomeActivity.this);
+        ButterKnife.bind(HomeActivity2.this);
 
         userRef = FirebaseFirestore.getInstance().collection("User");
         dialog=new SpotsDialog.Builder().setContext(this).setCancelable(false).build();
@@ -95,15 +90,11 @@ public class HomeActivity extends AppCompatActivity {
             boolean isLogin = getIntent().getBooleanExtra(Common.IS_LOGIN, false);
             if (isLogin) {
                 dialog.show();
-                AccountKit.getCurrentAccount(new AccountKitCallback<Account>() {
-                    @Override
-                    public void onSuccess(Account account) {
-                        if (account != null) {
 
-                            Paper.init(HomeActivity.this);
-                            Paper.book().write(Common.LOGGED_KEY2,account.getPhoneNumber().toString());
+                            Paper.init(HomeActivity2.this);
+                            Paper.book().write(Common.LOGGED_KEY2,Common.currentUser.getPhoneNumber());
 
-                            DocumentReference currentUser = userRef.document(account.getPhoneNumber().toString());
+                            DocumentReference currentUser = userRef.document(Common.currentUser.getPhoneNumber());
                             currentUser.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                                 @Override
                                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -113,7 +104,6 @@ public class HomeActivity extends AppCompatActivity {
                                         if (!userSnapshot.exists())
                                         {
 
-                                            showUpdateDialog(account.getPhoneNumber().toString());
 
                                         }
                                         else
@@ -135,14 +125,7 @@ public class HomeActivity extends AppCompatActivity {
                     }
 
 
-                    @Override
-                    public void onError(AccountKitError accountKitError) {
-                        dialog.dismiss();
-                        Toast.makeText(HomeActivity.this, "" + accountKitError.getErrorType().getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }
-        }
+
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             Fragment fragment=null;
 
@@ -168,66 +151,7 @@ public class HomeActivity extends AppCompatActivity {
     }
 
 
-    private void showUpdateDialog(String phoneNumber) {
 
-
-
-        bottomSheetDialog=new BottomSheetDialog(this);
-        bottomSheetDialog.setTitle("Još jedan korak!");
-        bottomSheetDialog.setCanceledOnTouchOutside(false);
-        bottomSheetDialog.setCancelable(false);
-        View sheetView=getLayoutInflater().inflate(R.layout.layout_update_inflater,null);
-
-
-        Button btn_update=(Button)sheetView.findViewById(R.id.btn_update);
-        final TextInputEditText edt_name=(TextInputEditText)sheetView.findViewById(R.id.edt_name);
-        final TextInputEditText edt_password=(TextInputEditText)sheetView.findViewById(R.id.edt_password);
-        btn_update.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view) {
-                if(!dialog.isShowing())
-                    dialog.show();
-                User user = new User(edt_name.getText().toString(),
-                        edt_password.getText().toString(),
-                        phoneNumber);
-                userRef.document(phoneNumber)
-                        .set(user)
-                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                                bottomSheetDialog.dismiss();
-                                if(dialog.isShowing())
-                                    dialog.dismiss();
-
-                                Common.currentUser=user;
-                                bottomNavigationView.setSelectedItemId(R.id.action_home);
-
-
-                                Toast.makeText(HomeActivity.this, "Thank you", Toast.LENGTH_SHORT).show();
-
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
-
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        bottomSheetDialog.dismiss();
-                        if(dialog.isShowing())
-                            dialog.dismiss();
-                        Toast.makeText(HomeActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
-
-                    }
-                });
-            }
-        });
-        bottomSheetDialog.setContentView(sheetView);
-        bottomSheetDialog.show();
-    }
 }
-
-
-
-
-
-
 
 

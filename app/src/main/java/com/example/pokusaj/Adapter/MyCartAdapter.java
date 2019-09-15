@@ -74,8 +74,8 @@ public class MyCartAdapter extends RecyclerView.Adapter<MyCartAdapter.MyViewHold
     @Override
     public void onBindViewHolder(@NonNull MyCartAdapter.MyViewHolder holder, int position) {
         Picasso.get().load(cartItemList.get(position).getProductImage()).into(holder.img_product);
+        holder.txt_cart_price.setText(new StringBuilder("Ukupno: ").append(cartItemList.get(position).getProductPrice()));
         holder.txt_cart_name.setText(new StringBuilder(cartItemList.get(position).getProductName()));
-        holder.txt_cart_price.setText(new StringBuilder("$").append(cartItemList.get(position).getProductPrice()));
         holder.txt_quantity.setText(new StringBuilder(String.valueOf(cartItemList.get(position).getProductQuantity())));
         holder.setListener(new IImageButtonListener() {
             @Override
@@ -89,6 +89,8 @@ public class MyCartAdapter extends RecyclerView.Adapter<MyCartAdapter.MyViewHold
                                 .get(pos)
                                 .getProductQuantity()-1);
                         DatabaseUtils.updateCart(cartDatabase,cartItemList.get(pos));
+                        holder.txt_quantity.setText(new StringBuilder(String.valueOf(cartItemList.get(position).getProductQuantity())));
+
                     }
                     else if(cartItemList.get(pos).getProductQuantity()==0)
                     {

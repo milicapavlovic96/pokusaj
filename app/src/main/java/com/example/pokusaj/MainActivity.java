@@ -17,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.pokusaj.Common.Common;
+import com.example.pokusaj.Fragments.HomeFragment;
 import com.facebook.accountkit.AccessToken;
 import com.facebook.accountkit.AccountKit;
 import com.facebook.accountkit.AccountKitLoginResult;
@@ -50,8 +51,7 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.btn_login)
     Button btn_login;
 
-    @BindView(R.id.txt_skip)
-    TextView txt_skip;
+
 
     @OnClick(R.id.btn_login)
     void loginUser()
@@ -63,18 +63,20 @@ public class MainActivity extends AppCompatActivity {
         startActivityForResult(intent,APP_REQUEST_CODE);
     }
 
-    @OnClick(R.id.txt_skip)
-    void skipLoginJustGoHome()
-    {
-        Intent intent=new Intent(this,StaffMainActivity.class);
-        intent.putExtra(Common.IS_LOGIN,false);
-        startActivity(intent);
-    }
+
 
     @OnClick(R.id.btn_login_username)
     void loginUsername()
     {
         Intent intent=new Intent(this, StaffMainActivity.class);
+        startActivity(intent);
+    }
+
+    @OnClick(R.id.btn_login_username2)
+
+    void loginUsername2()
+    {
+        Intent intent=new Intent(this, UserLoginActivity.class);
         startActivity(intent);
     }
 
@@ -168,7 +170,7 @@ public class MainActivity extends AppCompatActivity {
                                 @Override
                                 public void onFailure(@NonNull Exception e) {
                                     Toast.makeText(MainActivity.this,e.getMessage(),Toast.LENGTH_SHORT).show();
-                                    Intent intent=new Intent(MainActivity.this,HomeActivity.class);
+                                    Intent intent=new Intent(MainActivity.this, HomeActivity.class);
                                     intent.putExtra(Common.IS_LOGIN,true);
                                     startActivity(intent);
                                     finish();

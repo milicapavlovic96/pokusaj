@@ -36,6 +36,10 @@
         <activity android:name=".StaffHomeActivity" />
         <activity android:name=".DoneServicesActivity" />
         <activity android:name=".HistoryActivity" />
+        <activity android:name=".UserLoginActivity" />
+        <activity android:name=".HomeActivity2" />
+
+
 
 
         <meta-data

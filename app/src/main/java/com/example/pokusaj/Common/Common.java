@@ -87,6 +87,7 @@ public class Common {
     public static final String RATING_LAB_NAME = "RATING_LAB_NAME";
     public static final String RATING_DOKTOR_ID = "RATING_DOKTOR_ID";
     public static final String RATING_INFORMATION_KEY = "RATING_INFORMATION";
+    public static final String USER_KEY ="";
     public static Laboratory selectedLab;
     public static String IS_LOGIN="IsLogin";
     public static User currentUser;
@@ -102,6 +103,7 @@ public class Common {
     public static BookingInformation currentBooking;
     public static String currentBookingId="";
     public static BookingInformation currentBookingInformation;
+    public static String phonenum="";
 
     public static String convertTimeSlotToString(int position) {
         switch (position){
