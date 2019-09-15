@@ -262,6 +262,18 @@ public class TotalPriceFragment extends BottomSheetDialogFragment {
         });
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        dialog.dismiss();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        dialog.dismiss();
+    }
+
     private void createInvoice() {
         CollectionReference invoiceRef=FirebaseFirestore.getInstance()
                 .collection("AllLaboratories")

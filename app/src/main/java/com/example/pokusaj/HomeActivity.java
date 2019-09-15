@@ -1,10 +1,15 @@
 package com.example.pokusaj;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 
 import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -19,6 +24,7 @@ import com.example.pokusaj.Fragments.HomeFragment;
 import com.example.pokusaj.Fragments.ShoppingFragment;
 import com.example.pokusaj.Model.User;
 import com.example.pokusaj.R;
+import com.facebook.accountkit.AccessToken;
 import com.facebook.accountkit.Account;
 import com.facebook.accountkit.AccountKit;
 import com.facebook.accountkit.AccountKitCallback;
@@ -29,6 +35,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
@@ -53,6 +60,16 @@ public class HomeActivity extends AppCompatActivity {
     CollectionReference userRef;
 
     AlertDialog dialog;
+
+    @Nullable @BindView(R.id.activity_home)
+    DrawerLayout drawerLayout;
+
+    @BindView(R.id.navigation_view)
+    NavigationView navigationView;
+
+    ActionBarDrawerToggle actionBarDrawerToggle;
+
+
 
     @Override
     protected void onResume() {
@@ -87,6 +104,9 @@ public class HomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+
+
         ButterKnife.bind(HomeActivity.this);
 
         userRef = FirebaseFirestore.getInstance().collection("User");
@@ -142,6 +162,7 @@ public class HomeActivity extends AppCompatActivity {
                     }
                 });
             }
+            initView();
         }
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             Fragment fragment=null;
@@ -152,9 +173,62 @@ public class HomeActivity extends AppCompatActivity {
                     fragment=new HomeFragment();
                 else if(menuItem.getItemId()==R.id.action_shopping)
                     fragment=new ShoppingFragment();
+
                 return loadFragment(fragment);
             }
         });
+
+
+    }
+
+
+        private void initView() {
+            actionBarDrawerToggle=new ActionBarDrawerToggle(this,drawerLayout,
+                    R.string.open,
+                    R.string.close);
+
+            drawerLayout.addDrawerListener(actionBarDrawerToggle);
+            actionBarDrawerToggle.syncState();
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+                @Override
+                public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                    if(menuItem.getItemId()==R.id.menu_exit)
+                        logOut();
+                    return true;
+                }
+            });
+    }
+
+    private void logOut() {
+        Paper.init(this);
+        Paper.book().delete(Common.USER_KEY);
+        Paper.book().delete(Common.LOGGED_KEY2);
+        Paper.book().delete(Common.IS_LOGIN);
+        Paper.book().delete(Common.STATE_KEY);
+
+
+        new androidx.appcompat.app.AlertDialog.Builder(this)
+                .setMessage("Are you sure you want to logout?")
+                .setCancelable(false)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        AccountKit.logOut();
+
+                        Intent mainActivity=new Intent(HomeActivity.this,MainActivity.class);
+                        mainActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        mainActivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(mainActivity);
+                        finish();
+                    }
+                }).setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        }).show();
+
     }
 
     private boolean loadFragment(Fragment fragment) {
