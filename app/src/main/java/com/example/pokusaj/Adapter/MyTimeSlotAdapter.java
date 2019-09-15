@@ -92,6 +92,9 @@ public class MyTimeSlotAdapter extends RecyclerView.Adapter<MyTimeSlotAdapter.My
 
         holder.txt_time_slot.setText(new StringBuilder(Common.convertTimeSlotToString(position)).toString());
         if (timeSlotList.size() == 0) {
+
+
+            holder.card_time_slot.setEnabled(true);
             holder.card_time_slot.setCardBackgroundColor(context.getResources().getColor(android.R.color.white));
 
             holder.txt_time_slot_description.setText("Available");
@@ -101,6 +104,10 @@ public class MyTimeSlotAdapter extends RecyclerView.Adapter<MyTimeSlotAdapter.My
             for (TimeSlot slotValue : timeSlotList) {
                 int slot = Integer.parseInt(slotValue.getSlot().toString());
                 if (slot == position) {
+
+
+                    holder.card_time_slot.setEnabled(false);
+
                     holder.card_time_slot.setTag(Common.DISABLE_TAG);
                     holder.card_time_slot.setCardBackgroundColor(context.getResources().getColor(android.R.color.darker_gray));
 

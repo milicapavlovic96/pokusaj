@@ -30,6 +30,7 @@ import com.example.pokusaj.CartActivity;
 import com.example.pokusaj.Common.Common;
 import com.example.pokusaj.Database.CartDatabase;
 import com.example.pokusaj.Database.DatabaseUtils;
+import com.example.pokusaj.HistoryActivity;
 import com.example.pokusaj.Interface.IBannerLoadListener;
 import com.example.pokusaj.Interface.IBookingInfoLoadListener;
 import com.example.pokusaj.Interface.IBookingInformationChangeListener;
@@ -116,6 +117,11 @@ public class HomeFragment extends Fragment implements IBannerLoadListener, ILook
     void changeBooking(){
         changeBookingFromUser();
     }
+
+    @OnClick(R.id.card_view_history)
+    void openHistoryActivity(){
+
+startActivity(new Intent(getActivity(), HistoryActivity.class));    }
 
     private void changeBookingFromUser() {
         android.app.AlertDialog.Builder confirmDialog=new android.app.AlertDialog.Builder(getActivity())

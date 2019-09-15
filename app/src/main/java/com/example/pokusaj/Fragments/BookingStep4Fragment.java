@@ -434,6 +434,7 @@ localBroadcastManager.registerReceiver(confirmBookingReciever,new IntentFilter(C
         bookingInformation.setLabId(Common.currentLab.getLabId());
         bookingInformation.setLabAddress(Common.currentLab.getAddress());
         bookingInformation.setLabName(Common.currentLab.getName());
+       // bookingInformation.setBookingId(Common.currentBookingId);
         bookingInformation.setTime(new StringBuilder(Common.convertTimeSlotToString(Common.currentTimeSlot))
                 .append("at")
                 .append(simpleDateFormat.format(bookingDateWithourHouse.getTime())).toString());

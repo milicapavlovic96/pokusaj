@@ -6,13 +6,21 @@ import com.google.firebase.Timestamp;
 import java.util.List;
 
 public class BookingInformation {
-String bookingId, cityBook, customerName,customerPhone,time,doktorId,doktorName,labId,labName,labAddress;
+String  bookingId, cityBook, customerName,customerPhone,time,doktorId,doktorName,labId,labName,labAddress;
 private Long slot;
 private Timestamp timestamp;
 private boolean done;
 private List<CartItem> cartItemList;
 
     public BookingInformation() {
+    }
+
+    public String getBookingId() {
+        return bookingId;
+    }
+
+    public void setBookingId(String bookingId) {
+        this.bookingId = bookingId;
     }
 
     public BookingInformation(String customerName, String customerPhone, String time, String doktorId, String doktorName, String labId, String labName, String labAddress, Long slot) {
@@ -123,13 +131,7 @@ private List<CartItem> cartItemList;
         this.cityBook = cityBook;
     }
 
-    public String getBookingId() {
-        return bookingId;
-    }
 
-    public void setBookingId(String bookingId) {
-        this.bookingId = bookingId;
-    }
 
     public List<CartItem> getCartItemList() {
         return cartItemList;
