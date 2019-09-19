@@ -104,20 +104,7 @@ public class UserLoginActivity extends AppCompatActivity {
 
                                 Paper.book().write(Common.USER_KEY,new Gson().toJson(user));
 
-                                MyToken myToken = new MyToken();
-                                myToken.setToken_type(Common.TOKEN_TYPE.CLIENT);
-                                myToken.setUserPhone(user.getPhoneNumber().toString());
-
-                                FirebaseFirestore.getInstance()
-                                        .collection("Tokens")
-                                        .document(user.getPhoneNumber().toString())
-                                        .set(myToken)
-                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                            @Override
-                                            public void onComplete(@NonNull Task<Void> task) {
-
-                                            }
-                                        });
+//
                                 Intent home = new Intent(UserLoginActivity.this, HomeActivity2.class);
                                 home.putExtra(Common.IS_LOGIN, true);
                                 home.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
