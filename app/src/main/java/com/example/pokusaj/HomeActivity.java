@@ -41,6 +41,8 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -110,6 +112,7 @@ public class HomeActivity extends AppCompatActivity {
         ButterKnife.bind(HomeActivity.this);
 
         userRef = FirebaseFirestore.getInstance().collection("User");
+
         dialog=new SpotsDialog.Builder().setContext(this).setCancelable(false).build();
         if (getIntent() != null) {
             boolean isLogin = getIntent().getBooleanExtra(Common.IS_LOGIN, false);
@@ -264,6 +267,8 @@ public class HomeActivity extends AppCompatActivity {
                 User user = new User(edt_name.getText().toString(),
                         edt_password.getText().toString(),
                         phoneNumber);
+
+
                 userRef.document(phoneNumber)
                         .set(user)
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -274,7 +279,31 @@ public class HomeActivity extends AppCompatActivity {
                                     dialog.dismiss();
 
                                 Common.currentUser=user;
-                                bottomNavigationView.setSelectedItemId(R.id.action_home);
+
+                                Paper.init(HomeActivity.this);
+
+                                Paper.book().write(Common.LOGGED_KEY, phoneNumber);
+
+                                FirebaseInstanceId.getInstance()
+                                        .getInstanceId()
+                                        .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                                                if (task.isSuccessful()) {
+                                                    Common.updateToken3(getBaseContext(), task.getResult().getToken());
+                                                }
+                                            }
+                                                               }).addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+
+                                    }
+                                });
+
+
+
+
+                                                    bottomNavigationView.setSelectedItemId(R.id.action_home);
 
 
                                 Toast.makeText(HomeActivity.this, "Thank you", Toast.LENGTH_SHORT).show();

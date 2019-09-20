@@ -31,6 +31,7 @@ import com.example.pokusaj.Model.Doktor;
 import com.example.pokusaj.Model.Doktor2;
 import com.example.pokusaj.Model.Laboratory;
 import com.example.pokusaj.Model.MyToken;
+import com.example.pokusaj.Model.TokenUser;
 import com.example.pokusaj.Model.User;
 import com.example.pokusaj.R;
 import com.example.pokusaj.Service.MyFCMService;
@@ -362,10 +363,49 @@ public class Common {
         {
             if(!TextUtils.isEmpty(user))
             {
-               MyToken myToken=new MyToken();
+               TokenUser myToken=new TokenUser();
                 myToken.setToken(token);
                 myToken.setToken_type(TOKEN_TYPE.DOKTOR);
                 myToken.setUserPhone(user);
+                myToken.setLabId(Common.selectedLab.getLabId());
+             myToken.setDoktorId(Common.currentDoktor.getDoktorId());
+             myToken.setState_name(Common.state_name);
+             myToken.setName(Common.currentDoktor.getName());
+             myToken.setPassword(Common.currentDoktor.getPassword());
+
+
+
+                FirebaseFirestore.getInstance()
+                        .collection("Tokens")
+                        .document(user)
+                        .set(myToken)
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+
+
+                            }
+                        });
+            }
+        }
+    }
+
+    public static void updateToken3(Context context,String token)
+    {
+        Paper.init(context);
+        String user=Paper.book().read(Common.LOGGED_KEY);
+
+        if(user!=null)
+        {
+            if(!TextUtils.isEmpty(user))
+            {
+               TokenUser myToken=new TokenUser();
+                myToken.setToken(token);
+                myToken.setToken_type(TOKEN_TYPE.CLIENT);
+                myToken.setUserPhone(Common.currentUser.getPhoneNumber());
+                myToken.setName(Common.currentUser.getName());
+                myToken.setPassword(Common.currentUser.getPassword());
+
 
 
                 FirebaseFirestore.getInstance()

@@ -6,6 +6,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -30,6 +31,8 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 import com.google.gson.Gson;
 
 import butterknife.BindView;
@@ -65,6 +68,7 @@ public class UserLoginActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
+
     }
 
 @OnClick(R.id.btn_login)
@@ -96,7 +100,6 @@ public class UserLoginActivity extends AppCompatActivity {
 
 
                                 TokenUser user = new TokenUser();
-                                Paper.book().write(Common.LOGGED_KEY, user);
 
                                 for (DocumentSnapshot userSnapShot : task.getResult()) {
                                     user = userSnapShot.toObject(TokenUser.class);
@@ -106,6 +109,9 @@ public class UserLoginActivity extends AppCompatActivity {
                                 if (user.getToken_type() == Common.TOKEN_TYPE.CLIENT) {
                                         User pomocni = new User();
 
+                                        Paper.init(context);
+                                    Paper.book().write(Common.LOGGED_KEY, user.getName());
+
                                         pomocni.setPassword(user.getPassword());
                                         pomocni.setName(user.getName());
                                         pomocni.setPhoneNumber(user.getUserPhone());
@@ -114,29 +120,74 @@ public class UserLoginActivity extends AppCompatActivity {
 
                                         Paper.book().write(Common.USER_KEY, new Gson().toJson(pomocni));
 
-    //
-                                        Intent home = new Intent(UserLoginActivity.this, HomeActivity2.class);
-                                        home.putExtra(Common.IS_LOGIN, true);
-                                        home.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                        home.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                        startActivity(home);
-                                        finish();
+
+                                    FirebaseInstanceId.getInstance()
+                                            .getInstanceId()
+                                            .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                                                    if (task.isSuccessful()) {
+                                                        Common.updateToken3(getBaseContext(),task.getResult().getToken());
+
+                                                        Log.d("EDMTToken", task.getResult().getToken());
+
+                                                        Intent home = new Intent(UserLoginActivity.this, HomeActivity2.class);
+                                                        home.putExtra(Common.IS_LOGIN, true);
+                                                        home.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                                        home.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                                        startActivity(home);
+                                                        finish();
+                                                    }
+                                                }
+                                            })
+                                            .addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+
+                                                }
+                                            });
 
                                 }
                                 else if(user.getToken_type()== Common.TOKEN_TYPE.DOKTOR)
                                 {
-                                    Doktor pomocni= new Doktor(user.getName(),user.getDoktorId()
-                                    );
+
+                                    Paper.init(context);
+                                    Paper.book().write(Common.LOGGED_KEY, user.getName());
+                                    Doktor pomocni= new Doktor(user.getName(),user.getDoktorId());
 
                                     Common.currentDoktor=pomocni;
+                                    Common.currentDoktor.setPassword(user.getPassword());
                                     Common.selectedLab=new Laboratory(user.getLabId());
                                     Common.state_name=user.getState_name();
 
-                                    Intent intent=new Intent(UserLoginActivity.this,StaffHomeActivity.class);
-                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                    startActivity(intent);
-                                    finish();
+
+
+                                    FirebaseInstanceId.getInstance()
+                                            .getInstanceId()
+                                            .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                                                    if (task.isSuccessful()) {
+                                                        Common.updateToken(getBaseContext(),task.getResult().getToken());
+
+                                                        Log.d("EDMTToken", task.getResult().getToken());
+
+                                                        Intent intent=new Intent(UserLoginActivity.this,StaffHomeActivity.class);
+                                                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                                        startActivity(intent);
+                                                        finish();
+                                                    }
+                                                }
+                                            })
+                                            .addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+
+                                                }
+                                            });
+
+
 
                                 }
                             }
@@ -151,6 +202,5 @@ public class UserLoginActivity extends AppCompatActivity {
     }
 
 
+    }
 
-
-}

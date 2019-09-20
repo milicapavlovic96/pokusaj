@@ -65,13 +65,6 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-    @OnClick(R.id.btn_login_username)
-    void loginUsername()
-    {
-        Intent intent=new Intent(this, StaffMainActivity.class);
-        startActivity(intent);
-    }
-
     @OnClick(R.id.btn_login_username2)
 
     void loginUsername2()
@@ -79,9 +72,6 @@ public class MainActivity extends AppCompatActivity {
         Intent intent=new Intent(this, UserLoginActivity.class);
         startActivity(intent);
     }
-
-
-
 
 
     @Override
