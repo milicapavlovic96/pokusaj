@@ -16,8 +16,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.pokusaj.Common.Common;
 import com.example.pokusaj.Common.CustomLoginDialog;
+import com.example.pokusaj.Model.City;
 import com.example.pokusaj.Model.Doktor;
+import com.example.pokusaj.Model.Laboratory;
 import com.example.pokusaj.Model.MyToken;
+import com.example.pokusaj.Model.TokenUser;
 import com.example.pokusaj.Model.User;
 import com.facebook.accountkit.ui.AccountKitActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -71,7 +74,7 @@ public class UserLoginActivity extends AppCompatActivity {
 
 
         FirebaseFirestore.getInstance()
-                .collection("User")
+                .collection("Tokens")
                 .whereEqualTo("name",edt_user.getText().toString())
                 .whereEqualTo("password",edt_password.getText().toString())
                 .limit(1)
@@ -88,35 +91,61 @@ public class UserLoginActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
+
                             if (task.getResult().size() > 0) {
 
 
+                                TokenUser user = new TokenUser();
+                                Paper.book().write(Common.LOGGED_KEY, user);
 
-                                User user=new User();
-                                Paper.book().write(Common.LOGGED_KEY,user);
-
-                                for(DocumentSnapshot userSnapShot:task.getResult())
-                                {
-                                    user=userSnapShot.toObject(User.class);
+                                for (DocumentSnapshot userSnapShot : task.getResult()) {
+                                    user = userSnapShot.toObject(TokenUser.class);
 
                                 }
-                                Common.currentUser=user;
 
-                                Paper.book().write(Common.USER_KEY,new Gson().toJson(user));
+                                if (user.getToken_type() == Common.TOKEN_TYPE.CLIENT) {
+                                        User pomocni = new User();
 
-//
-                                Intent home = new Intent(UserLoginActivity.this, HomeActivity2.class);
-                                home.putExtra(Common.IS_LOGIN, true);
-                                home.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                home.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                startActivity(home);
-                                finish();
+                                        pomocni.setPassword(user.getPassword());
+                                        pomocni.setName(user.getName());
+                                        pomocni.setPhoneNumber(user.getUserPhone());
+
+                                        Common.currentUser = pomocni;
+
+                                        Paper.book().write(Common.USER_KEY, new Gson().toJson(pomocni));
+
+    //
+                                        Intent home = new Intent(UserLoginActivity.this, HomeActivity2.class);
+                                        home.putExtra(Common.IS_LOGIN, true);
+                                        home.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                        home.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                        startActivity(home);
+                                        finish();
+
+                                }
+                                else if(user.getToken_type()== Common.TOKEN_TYPE.DOKTOR)
+                                {
+                                    Doktor pomocni= new Doktor(user.getName(),user.getDoktorId()
+                                    );
+
+                                    Common.currentDoktor=pomocni;
+                                    Common.selectedLab=new Laboratory(user.getLabId());
+                                    Common.state_name=user.getState_name();
+
+                                    Intent intent=new Intent(UserLoginActivity.this,StaffHomeActivity.class);
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    startActivity(intent);
+                                    finish();
+
+                                }
+                            }
                             } else {
                                 Toast.makeText(context, "Wrong username / password or wrong salon", Toast.LENGTH_SHORT).show();
                             }
 
                         }
-                    }
+
 
                 });
     }

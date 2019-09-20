@@ -13,12 +13,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="90dp"
+        android:layout_marginBottom="7dp"
         android:background="@color/colorButton"
+
+
         android:fontFamily="@font/bellerose"
         android:text="Login"
-
-
         android:textColor="@android:color/white"
         android:textSize="22sp" />
 
@@ -26,8 +26,8 @@
         android:id="@+id/btn_login"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/btn_login_username"
-        android:layout_marginBottom="87dp"
+        android:layout_above="@+id/btn_login_username2"
+        android:layout_marginBottom="52dp"
         android:background="@color/colorButton"
         android:fontFamily="@font/bellerose"
         android:text="Register"
@@ -44,7 +44,7 @@
         android:layout_marginBottom="-78dp"
         android:background="@color/colorButton"
         android:fontFamily="@font/bellerose"
-
+android:visibility="gone"
 
         android:text="Staff Login"
         android:textColor="@android:color/white"

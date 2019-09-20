@@ -9,7 +9,10 @@ public class Doktor implements Parcelable {
     private Double rating;
     private Long ratingTimes;
 
-
+    public Doktor(String name,String doktorId) {
+        this.name = name;
+        this.doktorId=doktorId;
+    }
 
     public String getDoktorId() {
         return doktorId;

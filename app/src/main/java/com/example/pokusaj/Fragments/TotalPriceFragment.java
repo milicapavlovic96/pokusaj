@@ -25,6 +25,7 @@ import com.example.pokusaj.Model.FCMSendData;
 import com.example.pokusaj.Model.Invoice;
 import com.example.pokusaj.Model.MyToken;
 import com.example.pokusaj.Model.ShoppingItem;
+import com.example.pokusaj.Model.TokenUser;
 import com.example.pokusaj.R;
 import com.example.pokusaj.Retrofit.IFCMService;
 import com.example.pokusaj.Retrofit.RetroFitClient;
@@ -330,10 +331,14 @@ public class TotalPriceFragment extends BottomSheetDialogFragment {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if(task.isSuccessful() && task.getResult().size()>0)
                         {
+
+                            TokenUser tk=new TokenUser();
                             MyToken myToken=new MyToken();
                             for(DocumentSnapshot tokenSnapShot:task.getResult())
-                                myToken=tokenSnapShot.toObject(MyToken.class);
-
+                                tk=tokenSnapShot.toObject(TokenUser.class);
+                                myToken.setToken(tk.getToken());
+                                myToken.setToken_type(tk.getToken_type());
+                                myToken.setUserPhone(tk.getUserPhone());
 
                             FCMSendData fcmSendData=new FCMSendData();
                             Map<String,String> dataSend=new HashMap<>();

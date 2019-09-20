@@ -48,177 +48,182 @@ import dmax.dialog.SpotsDialog;
 import io.paperdb.Paper;
 
 public class HomeActivity2 extends AppCompatActivity {
-    @BindView(R.id.bottom_navigation)
-    BottomNavigationView bottomNavigationView;
-    BottomSheetDialog bottomSheetDialog;
-    CollectionReference userRef;
 
-    AlertDialog dialog;
+        @BindView(R.id.bottom_navigation)
+        BottomNavigationView bottomNavigationView;
+        BottomSheetDialog bottomSheetDialog;
+        CollectionReference userRef;
 
-    @Nullable
-    @BindView(R.id.activity_home)
-    DrawerLayout drawerLayout;
+        AlertDialog dialog;
 
-    @BindView(R.id.navigation_view)
-    NavigationView navigationView;
+        @Nullable
+        @BindView(R.id.activity_home)
+        DrawerLayout drawerLayout;
 
-    ActionBarDrawerToggle actionBarDrawerToggle;
+        @BindView(R.id.navigation_view)
+        NavigationView navigationView;
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        checkRatingDialog();
-    }
+        ActionBarDrawerToggle actionBarDrawerToggle;
 
-    private void checkRatingDialog() {
-        Paper.init(this);
-        String dataSerialized=Paper.book().read(Common.RATING_INFORMATION_KEY,"");
-        if(!TextUtils.isEmpty(dataSerialized))
-        {
-            Map<String,String> dataRecieved=new Gson()
-                    .fromJson(dataSerialized,new TypeToken<Map<String,String>>(){}.getType());
+        @Override
+        protected void onResume() {
+            super.onResume();
+            checkRatingDialog();
+        }
 
-            if(dataRecieved!=null){
-                Common.showRatingDialog(HomeActivity2.this,
-                        dataRecieved.get(Common.RATING_STATE_KEY),
-                        dataRecieved.get(Common.RATING_LAB_ID),
-                        dataRecieved.get(Common.RATING_LAB_NAME),
-                        dataRecieved.get(Common.RATING_DOKTOR_ID));
+        private void checkRatingDialog() {
+            Paper.init(this);
+            String dataSerialized=Paper.book().read(Common.RATING_INFORMATION_KEY,"");
+            if(!TextUtils.isEmpty(dataSerialized))
+            {
+                Map<String,String> dataRecieved=new Gson()
+                        .fromJson(dataSerialized,new TypeToken<Map<String,String>>(){}.getType());
+
+                if(dataRecieved!=null){
+                    Common.showRatingDialog(HomeActivity2.this,
+                            dataRecieved.get(Common.RATING_STATE_KEY),
+                            dataRecieved.get(Common.RATING_LAB_ID),
+                            dataRecieved.get(Common.RATING_LAB_NAME),
+                            dataRecieved.get(Common.RATING_DOKTOR_ID));
 
 
 
 
+                }
             }
         }
-    }
-
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
-        ButterKnife.bind(HomeActivity2.this);
+    protected void onPause() {
+        super.onPause();
+    }
 
-        userRef = FirebaseFirestore.getInstance().collection("User");
-        dialog=new SpotsDialog.Builder().setContext(this).setCancelable(false).build();
-        if (getIntent() != null) {
-            boolean isLogin = getIntent().getBooleanExtra(Common.IS_LOGIN, false);
-            if (isLogin) {
-                dialog.show();
+    @Override
+        protected void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            setContentView(R.layout.activity_home);
+            ButterKnife.bind(HomeActivity2.this);
 
-                            Paper.init(HomeActivity2.this);
-                            Paper.book().write(Common.LOGGED_KEY2,Common.currentUser.getPhoneNumber());
+            userRef = FirebaseFirestore.getInstance().collection("User");
+            dialog=new SpotsDialog.Builder().setContext(this).setCancelable(false).build();
+            if (getIntent() != null) {
+                boolean isLogin = getIntent().getBooleanExtra(Common.IS_LOGIN, false);
+                if (isLogin) {
+                    dialog.show();
 
-                            DocumentReference currentUser = userRef.document(Common.currentUser.getPhoneNumber());
-                            currentUser.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                    if (task.isSuccessful()) {
+                    Paper.init(HomeActivity2.this);
+                    Paper.book().write(Common.LOGGED_KEY2,Common.currentUser.getPhoneNumber());
 
-                                        DocumentSnapshot userSnapshot = task.getResult();
-                                        if (!userSnapshot.exists())
-                                        {
+                    DocumentReference currentUser = userRef.document(Common.currentUser.getPhoneNumber());
+                    currentUser.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            if (task.isSuccessful()) {
 
+                                DocumentSnapshot userSnapshot = task.getResult();
+                                if (!userSnapshot.exists())
+                                {
 
-                                        }
-                                        else
-                                        {
-                                            //if user already available in our system
-                                            Common.currentUser=userSnapshot.toObject(User.class);
-                                            bottomNavigationView.setSelectedItemId(R.id.action_home);
-
-                                        }
-                                        if(dialog.isShowing())
-                                            dialog.dismiss();
-
-
-                                    }
 
                                 }
-                            });
+                                else
+                                {
+                                    //if user already available in our system
+                                    Common.currentUser=userSnapshot.toObject(User.class);
+                                    bottomNavigationView.setSelectedItemId(R.id.action_home);
+
+                                }
+                                if(dialog.isShowing())
+                                    dialog.dismiss();
+
+
+                            }
+
                         }
-                    }
-
-
-
-        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            Fragment fragment=null;
-
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                if(menuItem.getItemId()== R.id.action_home)
-                    fragment=new HomeFragment();
-                else if(menuItem.getItemId()==R.id.action_shopping)
-                    fragment=new ShoppingFragment();
-                return loadFragment(fragment);
+                    });
+                }
             }
-        });
 
 
-        initView();
-    }
 
-    private void initView() {
-        actionBarDrawerToggle=new ActionBarDrawerToggle(this,drawerLayout,
-                R.string.open,
-                R.string.close);
+            bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+                Fragment fragment=null;
 
-        drawerLayout.addDrawerListener(actionBarDrawerToggle);
-        actionBarDrawerToggle.syncState();
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                if(menuItem.getItemId()==R.id.menu_exit)
-                    logOut();
+                @Override
+                public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                    if(menuItem.getItemId()== R.id.action_home)
+                        fragment=new HomeFragment();
+                    else if(menuItem.getItemId()==R.id.action_shopping)
+                        fragment=new ShoppingFragment();
+                    return loadFragment(fragment);
+                }
+            });
+
+
+            initView();
+        }
+
+        private void initView() {
+            actionBarDrawerToggle=new ActionBarDrawerToggle(this,drawerLayout,
+                    R.string.open,
+                    R.string.close);
+
+            drawerLayout.addDrawerListener(actionBarDrawerToggle);
+            actionBarDrawerToggle.syncState();
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+                @Override
+                public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                    if(menuItem.getItemId()==R.id.menu_exit)
+                        logOut();
+                    return true;
+                }
+            });
+        }
+
+        private void logOut() {
+            Paper.init(this);
+            Paper.book().delete(Common.USER_KEY);
+            Paper.book().delete(Common.LOGGED_KEY);
+            Paper.book().delete(Common.LOGGED_KEY2);
+            Paper.book().delete(Common.IS_LOGIN);
+            Paper.book().delete(Common.STATE_KEY);
+
+
+            new androidx.appcompat.app.AlertDialog.Builder(this)
+                    .setMessage("Are you sure you want to logout?")
+                    .setCancelable(false)
+                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            AccountKit.logOut();
+
+                            Intent mainActivity=new Intent(HomeActivity2.this,MainActivity.class);
+                            mainActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            mainActivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(mainActivity);
+                            finish();
+                        }
+                    }).setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.dismiss();
+                }
+            }).show();
+
+        }
+        private boolean loadFragment(Fragment fragment) {
+            if(fragment!=null)
+            {
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,fragment).commit();
                 return true;
             }
-        });
-    }
+            return false;
 
-    private void logOut() {
-        Paper.init(this);
-        Paper.book().delete(Common.USER_KEY);
-        Paper.book().delete(Common.LOGGED_KEY);
-        Paper.book().delete(Common.LOGGED_KEY2);
-        Paper.book().delete(Common.IS_LOGIN);
-        Paper.book().delete(Common.STATE_KEY);
-
-
-        new androidx.appcompat.app.AlertDialog.Builder(this)
-                .setMessage("Are you sure you want to logout?")
-                .setCancelable(false)
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        AccountKit.logOut();
-
-                        Intent mainActivity=new Intent(HomeActivity2.this,MainActivity.class);
-                        mainActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        mainActivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(mainActivity);
-                        finish();
-                    }
-                }).setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.dismiss();
-            }
-        }).show();
-
-    }
-    private boolean loadFragment(Fragment fragment) {
-        if(fragment!=null)
-        {
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,fragment).commit();
-            return true;
         }
-        return false;
+
+
 
     }
-
-
-
-}
 
 

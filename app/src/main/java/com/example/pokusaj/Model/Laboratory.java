@@ -9,6 +9,10 @@ public class Laboratory implements Parcelable {
     public Laboratory() {
     }
 
+    public Laboratory(String labId) {
+        this.labId = labId;
+    }
+
     protected Laboratory(Parcel in) {
         name = in.readString();
         address = in.readString();

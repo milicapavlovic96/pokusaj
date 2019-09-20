@@ -1,8 +1,10 @@
 package com.example.pokusaj;
 
+import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -40,6 +42,13 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.MultiplePermissionsReport;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -101,6 +110,8 @@ TextView notification_badge;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_staff_home);
 
+
+
         ButterKnife.bind(this);
         init();
         initView();
@@ -139,6 +150,8 @@ TextView notification_badge;
         }
     });
 
+
+    onResume();
     View headerView=navigationView.getHeaderView(0);
     txt_doktor_name=(TextView)headerView.findViewById(R.id.txt_doktor_name);
     txt_doktor_name.setText(Common.currentDoktor.getName());
@@ -200,7 +213,7 @@ alertDialog=new SpotsDialog.Builder().setCancelable(false).setContext(this).buil
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
 
-                        Intent mainActivity=new Intent(StaffHomeActivity.this,StaffMainActivity.class);
+                        Intent mainActivity=new Intent(StaffHomeActivity.this,MainActivity.class);
                         mainActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         mainActivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(mainActivity);
@@ -274,6 +287,7 @@ alertDialog=new SpotsDialog.Builder().setCancelable(false).setContext(this).buil
         iNotificationCountListener=this;
         initNotificationRealTimeUpdate();
         initBookingRealtimeUpdate();
+
         
     }
 
@@ -423,7 +437,10 @@ else
         super.onResume();
         initBookingRealtimeUpdate();
         initNotificationRealTimeUpdate();
-    }
+
+        }
+
+
 
     @Override
     protected void onStop() {
