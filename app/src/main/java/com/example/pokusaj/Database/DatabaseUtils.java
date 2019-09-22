@@ -17,7 +17,9 @@ public static void clearCart(CartDatabase db){
     ClearCartAsync task= new ClearCartAsync(db);
     task.execute();
 }
+    //imamo klasu cart DAO u kojoj getujemo instancu i onda imamo interfejs cart dao sa querijima pomocu kojih getujemo podatke iz baze
 
+   //ovde se realizuju metode poput insert,update,delete,get
     public static void sumCart(CartDatabase db, ISumCartListener iSumCartListener)
     {
         SumCartAsync task= new SumCartAsync(db,iSumCartListener);

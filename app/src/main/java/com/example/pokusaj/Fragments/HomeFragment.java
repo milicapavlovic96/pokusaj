@@ -261,7 +261,7 @@ startActivity(new Intent(getActivity(), HistoryActivity.class));    }
         loadUserBooking();
         countCartItem();
     }
-
+//Na osnovu danasnjeg datuma vadimo iz baze booking information
     private void loadUserBooking() {
         CollectionReference userBooking=FirebaseFirestore.getInstance()
                 .collection("User")

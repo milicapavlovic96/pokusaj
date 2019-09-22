@@ -52,7 +52,7 @@ public class BookingActivity extends AppCompatActivity {
     @BindView(R.id.btn_next_step)
     Button btn_next_step;
 
-
+//view pager vrsi navigaciju izmedju fragmenata u zavisnosti od step-a
     @OnClick(R.id.btn_previous_step)
     void previousStep(){
         if(Common.step==3||Common.step>0){
@@ -68,7 +68,7 @@ public class BookingActivity extends AppCompatActivity {
 
     @OnClick(R.id.btn_next_step)
     void nextClick() {
-
+//jos pri izboru laboratorije na step 1 odmah se ucitavaju doktori na osnovu id-a
         if (Common.step < 3 || Common.step == 0) {
             Common.step++;
             if (Common.step == 1) {
@@ -90,7 +90,7 @@ public class BookingActivity extends AppCompatActivity {
 
     }
     }
-
+//intent se salje local broadcast manageru i na osnovu key-a fragmenti ucitavaju deo intenta koji im je potreban
     private void confirmBooking() {
        //send broadcast to fragment step four
         Intent intent=new Intent(Common.KEY_CONFIRM_BOOKING);
