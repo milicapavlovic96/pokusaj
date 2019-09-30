@@ -88,10 +88,10 @@
                         android:layout_height="50dp" />
 
                     <TextView
-                        android:text="Booking"
+                        android:text="Zakazivanje pregleda"
                         android:fontFamily="@font/bellerose"
                         android:layout_gravity="center_horizontal"
-                        android:textSize="@dimen/textCardSize"
+                        android:textSize="14sp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" />
 
@@ -134,11 +134,11 @@
                     <TextView
                         android:id="@+id/txt_cart_title"
                         android:layout_below="@+id/cart_icon"
-                        android:text="Cart"
+                        android:text="Korpa"
                         android:fontFamily="@font/bellerose"
                         android:layout_centerHorizontal="true"
 
-                        android:textSize="@dimen/textCardSize"
+                        android:textSize="14sp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" />
 
@@ -171,8 +171,9 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
                         android:fontFamily="@font/bellerose"
-                        android:text="History"
-                        android:textSize="@dimen/textCardSize" />
+                        android:text="Istorija pregleda"
+
+                        android:textSize="14sp" />
 
                 </LinearLayout>
 
@@ -213,7 +214,7 @@
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="Your Booking Information"
+                                    android:text="Informacije o zakazanom pregledu"
                                     android:layout_marginLeft="8dp"
                                     android:textStyle="bold"
                                     android:textSize="18sp"
@@ -230,13 +231,13 @@
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="@string/address_bullet"/>
+                                    android:text="Adresa: "/>
 
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:id="@+id/txt_lab_address"
-                                    android:text="Address salon"
+                                    android:text="Adresa salona:"
                                     android:textStyle="bold"
                                     />
 
@@ -250,7 +251,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/time_bullet"/>
+                            android:text="Vreme: "/>
 
                              <TextView
                                  android:layout_width="wrap_content"
@@ -269,7 +270,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/stylelist_bullet"
+                        android:text="Doktor: "
                         />
 
                         <TextView
@@ -292,7 +293,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/bullet"/>
+                        android:text="Za: "/>
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

@@ -14,7 +14,7 @@ public interface CartDAO {
     @Query("SELECT SUM(productPrice*productQuantity) from Cart where userPhone=:userPhone")
     long sumPrice(String userPhone);
 
-@Query("SELECT * FROM Cart WHERE userPhone=:userPhone")
+    @Query("SELECT * FROM Cart WHERE userPhone=:userPhone")
     List<CartItem> getAllItemFromCart(String userPhone);
 
     @Query("SELECT COUNT(*) from Cart WHERE userPhone=:userPhone")
@@ -35,6 +35,6 @@ public interface CartDAO {
     @Query("DELETE FROM Cart WHERE userPhone=:userPhone")
     void clearCart(String userPhone);
 
-
-
 }
+
+

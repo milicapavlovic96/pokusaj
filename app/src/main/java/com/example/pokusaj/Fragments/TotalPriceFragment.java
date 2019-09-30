@@ -67,8 +67,8 @@ public class TotalPriceFragment extends BottomSheetDialogFragment {
     @BindView(R.id.recycler_view_shopping)
     RecyclerView recycler_view_shopping;
 
-    @BindView(R.id.txt_salon_name)
-    TextView txt_salon_name;
+//    @BindView(R.id.txt_salon_name)
+//    TextView txt_salon_name;
 
     @BindView(R.id.txt_doktor_name)
     TextView txt_doktor_name;
@@ -133,8 +133,8 @@ public class TotalPriceFragment extends BottomSheetDialogFragment {
     }
 
     private void setInformation() {
-        txt_salon_name.setText(Common.selectedLab.getName());
-        txt_doktor_name.setText(Common.currentDoktor.getName());
+        //txt_salon_name.setText(Common.selectedLab.getName());
+        //txt_doktor_name.setText(Common.currentDoktor.getName());
         txt_time.setText(Common.convertTimeSlotToString(Common.currentBookingInformation.getSlot().intValue()));
         txt_customer_name.setText(Common.currentBookingInformation.getCustomerName());
         txt_customer_phone.setText(Common.currentBookingInformation.getCustomerPhone());

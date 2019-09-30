@@ -33,12 +33,11 @@ public class CartActivity extends AppCompatActivity implements  ICartItemUpdateL
     @BindView(R.id.btn_clear_cart)
     Button btn_clear_cart;
     CartDatabase cartDatabase;
-
     @OnClick(R.id.btn_clear_cart)
+
     void clearCart(){
     DatabaseUtils.clearCart(cartDatabase);
-        DatabaseUtils.getAllCart(cartDatabase,this);
-
+    DatabaseUtils.getAllCart(cartDatabase,this);
     }
 
     @Override
@@ -54,11 +53,7 @@ public class CartActivity extends AppCompatActivity implements  ICartItemUpdateL
         LinearLayoutManager linearLayoutManager=new LinearLayoutManager(this);
         recycler_cart.setLayoutManager(linearLayoutManager);
         recycler_cart.addItemDecoration(new DividerItemDecoration(this,linearLayoutManager.getOrientation()));
-
-
     }
-
-
 
     @Override
     public void onCartItemUpdateListener() {
@@ -68,7 +63,6 @@ public class CartActivity extends AppCompatActivity implements  ICartItemUpdateL
     @Override
     public void onSumCartSuccess(Long value) {
         txt_total_price.setText(new StringBuilder("Ukupno: ").append(value));
-
     }
 
     @Override

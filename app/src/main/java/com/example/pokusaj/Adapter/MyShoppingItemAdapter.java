@@ -38,13 +38,13 @@ public class MyShoppingItemAdapter extends RecyclerView.Adapter<MyShoppingItemAd
         this.shoppingItemList = shoppingItemList;
         cartDatabase=CartDatabase.getInstance(context);
     }
-
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView= LayoutInflater.from(context).inflate(R.layout.layout_shopping_item,parent,false);
         return new MyViewHolder(itemView);
     }
+
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
@@ -65,12 +65,8 @@ public class MyShoppingItemAdapter extends RecyclerView.Adapter<MyShoppingItemAd
 
                 DatabaseUtils.insertToCart(cartDatabase,cartItem);
                 Toast.makeText(context,"Added to Cart",Toast.LENGTH_SHORT).show();
-
-
             }
         });
-
-
     }
 
     @Override

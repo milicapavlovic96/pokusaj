@@ -17,9 +17,7 @@ public static void clearCart(CartDatabase db){
     ClearCartAsync task= new ClearCartAsync(db);
     task.execute();
 }
-    //imamo klasu cart DAO u kojoj getujemo instancu i onda imamo interfejs cart dao sa querijima pomocu kojih getujemo podatke iz baze
 
-   //ovde se realizuju metode poput insert,update,delete,get
     public static void sumCart(CartDatabase db, ISumCartListener iSumCartListener)
     {
         SumCartAsync task= new SumCartAsync(db,iSumCartListener);
@@ -75,7 +73,6 @@ public static void clearCart(CartDatabase db){
             listener.onSumCartSuccess(aLong);
         }
     }
-
     private static class UpdateCartAsync extends AsyncTask<CartItem, Void, Void> {
         private final CartDatabase db;
 
@@ -89,9 +86,6 @@ public static void clearCart(CartDatabase db){
             return null;
         }
     }
-
-
-
     private static class GetAllCartAsync extends AsyncTask<String,Void,List<CartItem>> {
         CartDatabase db;
         ICartItemLoadListener listener;
@@ -114,7 +108,6 @@ public static void clearCart(CartDatabase db){
             listener.onGetAllItemFromCartSuccess(cartItems);
         }
     }
-
     private static class InsertToCartAsync extends AsyncTask<CartItem,Void,Void> {
        CartDatabase db;
         public InsertToCartAsync(CartDatabase cartDatabase) {
@@ -177,7 +170,6 @@ public static void clearCart(CartDatabase db){
             return null;
         }
     }
-
     private static class ClearCartAsync extends AsyncTask<Void, Void, Void> {
         private final CartDatabase db;
 

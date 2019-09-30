@@ -33,7 +33,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/txt_laboratory_name"
-        android:text="LAB NAME"
+        android:text="Zoran Vuković"
         android:textSize="18sp"
         android:fontFamily="@font/bellerose"
         android:textStyle="italic"

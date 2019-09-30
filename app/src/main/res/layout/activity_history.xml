@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/txt_history"
         android:fontFamily="@font/bellerose"
-        android:text="HISTORY"
+        android:text="Istorija pregleda"
         android:padding="8dp"
         android:textSize="30sp"
 

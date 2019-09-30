@@ -184,7 +184,7 @@ public class HistoryActivity extends AppCompatActivity implements iOnLoadHistory
 
     @Override
     public void onLoadCountSuccess(int count) {
-        txt_history.setText(new StringBuilder("HISTORY (")
+        txt_history.setText(new StringBuilder("Istorija pregleda (")
         .append(count)
         .append(")"));
     }
